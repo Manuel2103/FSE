@@ -5,10 +5,10 @@ package ChainofResponsibility;
  * Wenn nicht wird an das nächste Objekt in der Kette weitergegeben. Am Ende der Kette wird eine Exception geworfen.
  */
 
-public class Addieren implements iGrundrechnungsarten{
+public class Addieren implements IGrundrechnungsarten {
 
 
-    private iGrundrechnungsarten grundrechnungsart;
+    private IGrundrechnungsarten grundrechnungsart;
 
     /**
      * Im Konstruktor wird die nächste Grundrechnungsart in der Kette festgelegt.

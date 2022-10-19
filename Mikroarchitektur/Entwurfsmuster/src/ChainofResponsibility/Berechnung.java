@@ -5,7 +5,7 @@ package ChainofResponsibility;
  * Weiters wird die Exception behandelt, wenn das Ende der Kette erreicht wird
  */
 public class Berechnung {
-    private iGrundrechnungsarten berechnung;
+    private IGrundrechnungsarten berechnung;
 
     public Berechnung() {
         this.berechnung = new Addieren();

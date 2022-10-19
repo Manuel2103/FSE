@@ -2,9 +2,9 @@ package ChainofResponsibility;
 /**
  * Siehe Addieren
  */
-public class Multiplizieren implements iGrundrechnungsarten {
+public class Multiplizieren implements IGrundrechnungsarten {
 
-    private iGrundrechnungsarten grundrechnungsart;
+    private IGrundrechnungsarten grundrechnungsart;
 
     public Multiplizieren() {
         this.grundrechnungsart = new Dividieren();

@@ -4,9 +4,9 @@ package ChainofResponsibility;
  * Siehe Addieren
  */
 
-public class Subtrahieren implements iGrundrechnungsarten{
+public class Subtrahieren implements IGrundrechnungsarten {
 
-    private iGrundrechnungsarten grundrechnungsart;
+    private IGrundrechnungsarten grundrechnungsart;
     public Subtrahieren() {
         grundrechnungsart = new Multiplizieren();
 

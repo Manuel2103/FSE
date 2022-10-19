@@ -2,9 +2,9 @@ package ChainofResponsibility;
 /**
  * Siehe Addieren
  */
-public class Dividieren implements iGrundrechnungsarten{
+public class Dividieren implements IGrundrechnungsarten {
 
-    private iGrundrechnungsarten grundrechnungsart;
+    private IGrundrechnungsarten grundrechnungsart;
     public Dividieren() {
         grundrechnungsart = null;
     }
