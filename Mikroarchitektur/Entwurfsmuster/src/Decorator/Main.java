@@ -3,14 +3,14 @@ package Decorator;
 public class Main {
     public static void main(String[] args) {
 
-        //Erstellen der Objekte mit dem Interface
-        //Hierbei kann man nicht erkennen, dass ein Decorator dazwischen liegt
-        IKomponente intelCPU = new Intel("Intel i7", "7757", "4 GHz", "Übertakten bis 5 GHz");
-        IKomponente amdCPU = new AMD("AMD Ryzen 5", "5859", "3 GHz", "RGB quiet Fan");
+        //Es wird ein neues Gericht erstellt mit zwei Beilagen
+        //Dabei werden die dekorierten Beilagen verschachtelt und zum Schluss wird eine neue Hauptspeise übergeben.
+        //Somit summiert sich der Preis und die Zeichenkette erweitert sich.
+        IGericht gericht = new Pommes(new Reis(new Hauptspeise1()));
+        System.out.println(gericht.getBeschreibung());
+        System.out.println(gericht.getPreis());
 
-        //Aufruf der Methode getEigenschaften die schon im Interface deklariert wurde
-        System.out.println(intelCPU.getEigenschaften());
-        System.out.println(amdCPU.getEigenschaften());
+
 
     }
 }
