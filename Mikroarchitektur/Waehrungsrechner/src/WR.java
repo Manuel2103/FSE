@@ -1,6 +1,4 @@
-package ChainofResponsibility;
-
-public abstract class WR implements IUmrechnen{
+public abstract class WR implements IUmrechnen {
     private WR nextChainElem = null;
 
     /**

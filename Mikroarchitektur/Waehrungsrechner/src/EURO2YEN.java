@@ -1,6 +1,4 @@
-package ChainofResponsibility;
-
-public class EURO2YEN extends WR{
+public class EURO2YEN extends WR {
 
     @Override
     public double getFaktor() {
