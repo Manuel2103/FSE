@@ -1,5 +1,6 @@
 public abstract class WR implements IUmrechnen {
-    private WR nextChainElem = null;
+
+    private WR nextChainElem;
 
     /**
      * Berechnet den Betrag
@@ -51,6 +52,8 @@ public abstract class WR implements IUmrechnen {
             nextChainElem.removeNextChainElem();
         }
     }
-
+    public void setNextChainElem(WR nextChainElem){
+        this.nextChainElem = nextChainElem;
+    }
 
 }

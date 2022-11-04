@@ -38,7 +38,30 @@ public class Main {
             throw new RuntimeException(e);
         }
 
-        
+        //Builder
+        //Mithilfe des Builder zwei neue Umrechnugnsmöglichkeiten erstellen.
+        //Die Beiden bilden eine neue Kette
+        WR euro2Dollar2 = new EURO2Builder.WRBuilder()
+                .variante("EURO2Dollar2")
+                .nextChainElem(null)
+                .faktor(0.988)
+                .build();
+
+        WR euro2KRONEN = new EURO2Builder.WRBuilder()
+                .variante("EURO2KRONEN")
+                .nextChainElem(euro2Dollar2)
+                .faktor(24.43)
+                .build();
+
+        //Möglichkeit sie in die bereits vorhandene Kette einzupflegen
+        //wr.addNextChainElem(buildNewWR);
+
+        try {
+            System.out.println(euro2KRONEN.umrechnen("EURO2KRONEN", 5));
+            System.out.println(euro2KRONEN.umrechnen("EURO2Dollar2", 5));
+        } catch (ENoElementinChain e) {
+            throw new RuntimeException(e);
+        }
 
 
     }
