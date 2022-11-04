@@ -5,6 +5,7 @@ package Builder;
  */
 public class Direktor {
     public static void main(String[] args) {
+
         construct();
     }
 
