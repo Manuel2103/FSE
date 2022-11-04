@@ -3,6 +3,7 @@ public class Main {
 
         //Standartverhalten einer Chain of Responsibility
         //Start der Chain
+        System.out.println("CHAIN OF RESPONSIBILITY");
         WR wr = new EURO2Dollar();
         //Hinzufügen von Umrechnungsarten
         wr.addNextChainElem(new EURO2YEN());
@@ -28,6 +29,8 @@ public class Main {
         wr.addNextChainElem(new EURO2YEN());
 
         //Dekorierer
+        System.out.println("-------------------------------------");
+        System.out.println("DECORATOR");
         //Zwei verschiedene konkrete Decorators (Rechnen mit 0.5 Prozent Abzug oder 5€ Fixbetrag)
         DecoWR rechneMitProzent = new DecoProzent(wr);
         DecoWR rechneFix = new DecoFix(wr);
@@ -39,6 +42,8 @@ public class Main {
         }
 
         //Builder
+        System.out.println("-------------------------------------");
+        System.out.println("BUILDER");
         //Mithilfe des Builder zwei neue Umrechnugnsmöglichkeiten erstellen.
         //Die Beiden bilden eine neue Kette
         WR euro2Dollar2 = new EURO2Builder.WRBuilder()
@@ -55,7 +60,6 @@ public class Main {
 
         //Möglichkeit sie in die bereits vorhandene Kette einzupflegen
         //wr.addNextChainElem(buildNewWR);
-
         try {
             System.out.println(euro2KRONEN.umrechnen("EURO2KRONEN", 5));
             System.out.println(euro2KRONEN.umrechnen("EURO2Dollar2", 5));
@@ -63,6 +67,14 @@ public class Main {
             throw new RuntimeException(e);
         }
 
+
+        //Adapter
+        System.out.println("-------------------------------------");
+        System.out.println("ADAPTER");
+        double[] betraege = new double[]{5,6,10};
+        //Erstellen eines Adapter Objekts
+        AdapterUmrechnung adapterUmrechnung = new AdapterUmrechnung(wr);
+        System.out.println(adapterUmrechnung.sammelumrechnen(betraege, "EURO2YEN"));
 
     }
 }
