@@ -1,4 +1,4 @@
-public class EURO2Builder extends WR{
+public class EURO2Builder extends WR {
 
     private Double faktor;
     private String variante;
@@ -6,27 +6,29 @@ public class EURO2Builder extends WR{
     /**
      * Builder Klasse für Umrechnungen
      */
-    public static class WRBuilder{
+    public static class WRBuilder {
         private Double faktor;
         private WR nextChainElem;
         private String variante;
 
         //Setzen der einzelnen Datenfelder
-        public WRBuilder faktor(Double faktor){
+        public WRBuilder faktor(Double faktor) {
             this.faktor = faktor;
             return this;
         }
-        public WRBuilder nextChainElem(WR nextChainElem){
+
+        public WRBuilder nextChainElem(WR nextChainElem) {
             this.nextChainElem = nextChainElem;
             return this;
         }
 
-        public WRBuilder variante(String variante){
+        public WRBuilder variante(String variante) {
             this.variante = variante;
             return this;
         }
+
         //Zusammenfügen der Datenfelder zu einem Währungsrechner
-        public WR build(){
+        public WR build() {
             EURO2Builder wr = new EURO2Builder();
             wr.variante = this.variante;
             wr.faktor = this.faktor;
@@ -34,11 +36,11 @@ public class EURO2Builder extends WR{
             return wr;
         }
 
-       }
+    }
 
 
-   //Privater Konstrucktur damit ein Objekt erzeugt werden kann und damit der Builder verwendet wird
-    private EURO2Builder(){
+    //Privater Konstrucktur damit ein Objekt erzeugt werden kann und damit der Builder verwendet wird
+    private EURO2Builder() {
 
     }
 
@@ -49,9 +51,9 @@ public class EURO2Builder extends WR{
 
     @Override
     public boolean zustaendig(String variante) {
-        if(this.variante.equals(variante)){
+        if (this.variante.equals(variante)) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }

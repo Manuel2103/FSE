@@ -5,6 +5,9 @@ public class Main {
         //Start der Chain
         System.out.println("CHAIN OF RESPONSIBILITY");
         WR wr = new EURO2Dollar();
+
+        EURO2Dollar euro2Dollar = new EURO2Dollar();
+
         //Hinzufügen von Umrechnungsarten
         wr.addNextChainElem(new EURO2YEN());
         Double betrag;
@@ -71,7 +74,7 @@ public class Main {
         //Adapter
         System.out.println("-------------------------------------");
         System.out.println("ADAPTER");
-        double[] betraege = new double[]{5,6,10};
+        double[] betraege = new double[]{5, 6, 10};
         //Erstellen eines Adapter Objekts
         AdapterUmrechnung adapterUmrechnung = new AdapterUmrechnung(wr);
         System.out.println(adapterUmrechnung.sammelumrechnen(betraege, "EURO2YEN"));

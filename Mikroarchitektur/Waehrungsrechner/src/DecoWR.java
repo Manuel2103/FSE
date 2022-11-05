@@ -1,4 +1,4 @@
-public abstract class DecoWR extends WR{
+public abstract class DecoWR extends WR {
     /**
      * Datenfeld wr um einen Währungsrechner zu verwenden
      */

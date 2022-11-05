@@ -1,7 +1,7 @@
-public class AdapterUmrechnung implements ISammelumrechnung{
+public class AdapterUmrechnung implements ISammelumrechnung {
 
-    //Es wird eine Chain für das Umrechnen verwendet
     WR wr;
+
     //Rechnungsart wird übergeben
     public AdapterUmrechnung(WR wr) {
         this.wr = wr;
@@ -9,6 +9,7 @@ public class AdapterUmrechnung implements ISammelumrechnung{
 
     /**
      * Durchläuft das Array und berechnet das Ergebnis
+     *
      * @param betraege Betreage
      * @param variante Variante der Umrechnung
      * @return Summe der umgewandelten Betraege
