@@ -99,6 +99,27 @@ PreparedStatement preparedStatement = conn.prepareStatement("UPDATE `student`SET
             }
 ```
 
+### Daten löschen
+
+Daten können gelöscht werden, wenn eine Verbindung zur Datenbank besteht und ein korrektes DELETE Statement als preparedStatement verwendet wird. Die Funktion wurde erweitert, indem jetzt Parameter übergeben werden können die bestimmen welcher Datensatz gelöscht werden soll.
+
+```java
+PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM `student` WHERE `student`.`id` = ?");
+    try {
+        //Fragezeichen auffüllen
+        preparedStatement.setInt(1, studentID);
+        // Statement ausführen
+        int rowAffected = preparedStatement.executeUpdate();
+        System.out.println("Anzahl der gelöschten Zeilen" + rowAffected);
+    }catch (SQLException ex) {
+        System.out.println("Fehler im der SQL-Delete Statement: " + ex.getMessage());
+    }
+```
+
+### Daten abfragen 2
+
+
+
 
 
 

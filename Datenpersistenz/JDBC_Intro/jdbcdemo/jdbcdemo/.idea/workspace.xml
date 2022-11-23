@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b98e7a4f-1393-4bab-97ef-a337ee52d774" name="Changes" comment="Daten einfügen">
+    <list default="true" id="b98e7a4f-1393-4bab-97ef-a337ee52d774" name="Changes" comment="Daten ändern + löschen + Funktionen Erweiterung mit Parameter">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/at/itkolleg/JDBCDemo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/itkolleg/JDBCDemo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/at/itkolleg/JDBCDemo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/at/itkolleg/JDBCDemo.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -76,7 +78,7 @@
       <updated>1669188585333</updated>
       <workItem from="1669188587140" duration="4315000" />
       <workItem from="1669193030767" duration="72000" />
-      <workItem from="1669193139566" duration="3704000" />
+      <workItem from="1669193139566" duration="4929000" />
     </task>
     <task id="LOCAL-00001" summary="Entwicklungsumgebung einrichten (JDBC Dependency hinzugfügt), Erste Verbindung zur Datenbank hergestellt">
       <created>1669191666386</created>
@@ -120,7 +122,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669194417263</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Daten ändern + löschen + Funktionen Erweiterung mit Parameter">
+      <created>1669196900673</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1669196900673</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -143,6 +152,7 @@
     <MESSAGE value="Daten abfragen 1" />
     <MESSAGE value="Refactor Name" />
     <MESSAGE value="Daten einfügen" />
-    <option name="LAST_COMMIT_MESSAGE" value="Daten einfügen" />
+    <MESSAGE value="Daten ändern + löschen + Funktionen Erweiterung mit Parameter" />
+    <option name="LAST_COMMIT_MESSAGE" value="Daten ändern + löschen + Funktionen Erweiterung mit Parameter" />
   </component>
 </project>
