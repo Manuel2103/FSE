@@ -39,7 +39,7 @@ public class EURO2Builder extends WR {
     }
 
 
-    //Privater Konstrucktur damit ein Objekt erzeugt werden kann und damit der Builder verwendet wird
+    //Privater Konstruktor damit ein Objekt erzeugt werden kann und damit der Builder verwendet wird
     private EURO2Builder() {
 
     }
