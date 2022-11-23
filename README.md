@@ -66,6 +66,39 @@ Als erstes muss ein PreparedStatement erstellt werden. Dazu wird auf unser conne
 
 ### Daten hinzufügen
 
+Ähnlich wie das Abfragen von Daten wird zuerst eine Verbindung zu der Datenbank hergestellt. Es wird auch PreparedStatement erstellt wobei die zu einfügenden Daten nicht direkt in das Insert Statement geschrieben werden, sonder ? als Placeholder. Dies verhindert eine SQL Injektion und die Geschwindigkeit erhöht, da das Statement schon vorgeladen ist. Damit das Einfügen auch gemacht wird muss am preparedStatement executeUpdate aufgerufen werden. Diese Funktion gibt einen Integer zurück wie viele Zeile betroffen waren. Beispiel Code: 
+```Java
+ //SQL Statement vorbereiten
+            PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO `student` (`id`, `name`, `email`) VALUES (NULL, ?, ?)");
+            try {
+                preparedStatement.setString(1, "Peter Zeck");
+                preparedStatement.setString(2, "p.zeck@gmail.com");
+                int rowAffected = preparedStatement.executeUpdate();
+                System.out.println("Datensätze eingefügt: " + rowAffected);
+
+            }catch (SQLException ex) {
+                System.out.println("Fehler im der SQL-INSERT Statement: " + ex.getMessage());
+            }
+```
+
+### Daten ändern
+
+Um Daten zu ändern wird wieder eine Verbindung zu Datenbank erstellt. Danach wird ein preparedStatement mit einem UPDATE erstellt, wobei die Daten wieder mit einem ? später eingefügt werden. Die Daten werden mit set Funktionen eingefügt und die Anzahl der aktualisierten Daten wird mit der executeUpdate Methode zurückgegeben. 
+
+```java
+PreparedStatement preparedStatement = conn.prepareStatement("UPDATE `student`SET `name` = ?, `email`= ? WHERE `student`.`id` = 5");
+            try {
+
+                preparedStatement.setString(1, "Hans Zimmer");
+                preparedStatement.setString(2, "Hans@zimmer.home");
+                int affectedRows = preparedStatement.executeUpdate();
+                System.out.println(affectedRows + " Datensätze geändert.");
+
+            }catch (SQLException ex) {
+                System.out.println("Fehler im der SQL-update Statement: " + ex.getMessage());
+            }
+```
+
 
 
 
