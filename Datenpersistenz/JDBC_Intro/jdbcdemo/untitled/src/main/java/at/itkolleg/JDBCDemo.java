@@ -1,8 +1,6 @@
 package at.itkolleg;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class JDBCDemo {
 
@@ -18,12 +16,21 @@ public class JDBCDemo {
         String user = "root";
         String pw = "";
         try (Connection conn = DriverManager.getConnection(connectionURL,"root", "")){
-
             System.out.println("Verbindung zur DB hergestellt!");
+            //SQL Statement vorbereiten
+            PreparedStatement preparedStatement = conn.prepareStatement(sqlSelectAllPersons);
+            //Abfrage executen
+            ResultSet rs = preparedStatement.executeQuery();
+            //Durch das ResultSet iterieren mit .next()
+            while (rs.next()){
+               int id = rs.getInt("id");
+               String name = rs.getString("name");
+               String email = rs.getString("email");
+               System.out.println("Student aus der DB: ID: " + id + " Name: " + name + " EMAIL: " + email);
+            }
         }catch (SQLException e)
         {
             System.out.println("Fehler beim Aufbau der Verbindung zur DB: " + e.getMessage());
-
         }
     }
 }

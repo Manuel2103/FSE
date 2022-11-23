@@ -42,9 +42,32 @@ Eine Verbindung könnte zum Beispiel so aussehen:
         }catch (SQLException e)
         {
             System.out.println("Fehler beim Aufbau der Verbindung zur DB: " + e.getMessage());
-
         }
 ```
+
+### Daten abfragen
+
+Das Abfragen von Daten der Datenbank wird in diesem Bereich dokumentiert.
+
+Als erstes muss ein PreparedStatement erstellt werden. Dazu wird auf unser connection die PrepareStatement Funktion aufgerufen und ein SQL Statement übergeben. Dieses Statement wird dann mit der Funktion executeQuery an dem preparedStatement aufgerufen. Als Ergebnis wird ein ResultSet zurückgegeben. Mithilfe einer while Schleife und der next Funktion kann durch das Ergebnis der Abfrage iteriert werden. Die einzelnen Daten werden mit einer Get Methode und dem Namen oder Nummer der Spalte ausgelesen. Der Code kann folgendermaßen aussehen.
+```java
+ PreparedStatement preparedStatement = conn.prepareStatement(sqlSelectAllPersons);
+            //Abfrage executen
+            ResultSet rs = preparedStatement.executeQuery();
+            //Durch das ResultSet iterieren mit .next()
+            while (rs.next()){
+               int id = rs.getInt("id");
+               String name = rs.getString("name");
+               String email = rs.getString("email");
+               System.out.println("Student aus der DB: ID: " + id + " Name: " + name + " EMAIL: " + email);
+            }
+
+```
+
+### Daten hinzufügen
+
+
+
 
 
 
