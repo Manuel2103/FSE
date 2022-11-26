@@ -10,6 +10,8 @@ public class JDBCDemo2 {
         selectAll();
         updateHobby(5, "Handball", new BigDecimal(20.20));
         selectAll();
+        deleteHobby(6);
+        selectAll();
 
 
     }
@@ -73,6 +75,12 @@ public class JDBCDemo2 {
         }
     }
 
+    /**
+     * Aktualsiert ein Hobby.
+     * @param id id des Hobbies
+     * @param bezeichnung neue Bezeichnung des Hobbies
+     * @param beitrag neuer Beitrag des Hobbies
+     */
     public static void updateHobby(int id, String bezeichnung, BigDecimal beitrag){
         String connectionURL = "jdbc:mysql://localhost:3306/jdbcdemo";
         String user = "root";
@@ -99,6 +107,35 @@ public class JDBCDemo2 {
 
         }
 
+    }
+
+    /**
+     * einen Datensatz löschen
+     * @param id id des zu löschenden Datensatzes
+     */
+    public static void deleteHobby(int id){
+        String connectionURL = "jdbc:mysql://localhost:3306/jdbcdemo";
+        String user = "root";
+        String pw = "";
+
+        try (Connection conn = DriverManager.getConnection(connectionURL, user, pw)) {
+            String sqlstatement = "DELETE FROM `hobbies` WHERE `hobbies`.`id` = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(sqlstatement);
+
+            try {
+                preparedStatement.setInt(1, id);
+                int affectedRows = preparedStatement.executeUpdate();
+                System.out.println("Datensätze gelöscht: " + affectedRows);
+
+            } catch (SQLException e) {
+                System.out.println("Fehler beim Delete " + e.getMessage());
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println("Fehler " + e.getMessage());
+
+        }
     }
 }
 
