@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b98e7a4f-1393-4bab-97ef-a337ee52d774" name="Changes" comment="Daten abfragen 2 (findAllByNameLike)">
-      <change afterPath="$PROJECT_DIR$/src/main/java/at/itkolleg/JDBCDemo2.java" afterDir="false" />
+    <list default="true" id="b98e7a4f-1393-4bab-97ef-a337ee52d774" name="Changes" comment="JDBC Demo 2 einfaches Select">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/at/itkolleg/JDBCDemo2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/itkolleg/JDBCDemo2.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,7 +92,7 @@
       <workItem from="1669193030767" duration="72000" />
       <workItem from="1669193139566" duration="4929000" />
       <workItem from="1669204906563" duration="1666000" />
-      <workItem from="1669451066448" duration="230000" />
+      <workItem from="1669451066448" duration="870000" />
     </task>
     <task id="LOCAL-00001" summary="Entwicklungsumgebung einrichten (JDBC Dependency hinzugfügt), Erste Verbindung zur Datenbank hergestellt">
       <created>1669191666386</created>
@@ -144,7 +143,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669196900673</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="JDBC Demo 2 einfaches Select">
+      <created>1669451349361</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1669451349361</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -168,6 +174,7 @@
     <MESSAGE value="Refactor Name" />
     <MESSAGE value="Daten einfügen" />
     <MESSAGE value="Daten ändern + löschen + Funktionen Erweiterung mit Parameter" />
-    <option name="LAST_COMMIT_MESSAGE" value="Daten ändern + löschen + Funktionen Erweiterung mit Parameter" />
+    <MESSAGE value="JDBC Demo 2 einfaches Select" />
+    <option name="LAST_COMMIT_MESSAGE" value="JDBC Demo 2 einfaches Select" />
   </component>
 </project>
