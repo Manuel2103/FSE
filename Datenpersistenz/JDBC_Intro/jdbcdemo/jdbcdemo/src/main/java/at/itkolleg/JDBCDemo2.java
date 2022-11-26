@@ -8,10 +8,15 @@ public class JDBCDemo2 {
         selectAll();
         insertHobby("Schwimmen", new BigDecimal(0));
         selectAll();
+        updateHobby(5, "Handball", new BigDecimal(20.20));
+        selectAll();
 
 
     }
 
+    /**
+     * Gibt alle Datensätze aus.
+     */
     public static void selectAll() {
         String connectionURL = "jdbc:mysql://localhost:3306/jdbcdemo";
         String user = "root";
@@ -37,6 +42,11 @@ public class JDBCDemo2 {
 
     }
 
+    /**
+     * Fügt einen neuen Datensatz hinzu
+     * @param bezeichnung Bezeichnung des Hobbies
+     * @param beitrag Betrag des benötigten Vereinsbeitrages
+     */
     public static void insertHobby(String bezeichnung, BigDecimal beitrag) {
         String connectionURL = "jdbc:mysql://localhost:3306/jdbcdemo";
         String user = "root";
@@ -61,6 +71,34 @@ public class JDBCDemo2 {
             System.out.println("Fehler " + e.getMessage());
 
         }
+    }
+
+    public static void updateHobby(int id, String bezeichnung, BigDecimal beitrag){
+        String connectionURL = "jdbc:mysql://localhost:3306/jdbcdemo";
+        String user = "root";
+        String pw = "";
+
+        try (Connection conn = DriverManager.getConnection(connectionURL, user, pw)) {
+            String sqlstatement = "UPDATE `hobbies` SET `bezeichnung` = ?, `beitrag` = ? WHERE `hobbies`.`id` = ? ";
+            PreparedStatement preparedStatement = conn.prepareStatement(sqlstatement);
+
+            try {
+                preparedStatement.setString(1, bezeichnung);
+                preparedStatement.setBigDecimal(2, beitrag);
+                preparedStatement.setInt(3, id);
+                int affectedRows = preparedStatement.executeUpdate();
+                System.out.println("Datensätze geupdated: " + affectedRows);
+
+            } catch (SQLException e) {
+                System.out.println("Fehler beim Insert " + e.getMessage());
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println("Fehler " + e.getMessage());
+
+        }
+
     }
 }
 
