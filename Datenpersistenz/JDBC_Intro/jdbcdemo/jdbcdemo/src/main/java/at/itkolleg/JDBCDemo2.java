@@ -12,6 +12,7 @@ public class JDBCDemo2 {
         selectAll();
         deleteHobby(6);
         selectAll();
+        selectHobbyLike("Sch");
 
 
     }
@@ -20,6 +21,7 @@ public class JDBCDemo2 {
      * Gibt alle Datensätze aus.
      */
     public static void selectAll() {
+        System.out.println("---------------------SelectAll---------------------");
         String connectionURL = "jdbc:mysql://localhost:3306/jdbcdemo";
         String user = "root";
         String pw = "";
@@ -50,6 +52,7 @@ public class JDBCDemo2 {
      * @param beitrag Betrag des benötigten Vereinsbeitrages
      */
     public static void insertHobby(String bezeichnung, BigDecimal beitrag) {
+        System.out.println("---------------------insertHobby---------------------");
         String connectionURL = "jdbc:mysql://localhost:3306/jdbcdemo";
         String user = "root";
         String pw = "";
@@ -82,6 +85,7 @@ public class JDBCDemo2 {
      * @param beitrag neuer Beitrag des Hobbies
      */
     public static void updateHobby(int id, String bezeichnung, BigDecimal beitrag){
+        System.out.println("---------------------updateHobby---------------------");
         String connectionURL = "jdbc:mysql://localhost:3306/jdbcdemo";
         String user = "root";
         String pw = "";
@@ -114,6 +118,7 @@ public class JDBCDemo2 {
      * @param id id des zu löschenden Datensatzes
      */
     public static void deleteHobby(int id){
+        System.out.println("---------------------deleteHobby---------------------");
         String connectionURL = "jdbc:mysql://localhost:3306/jdbcdemo";
         String user = "root";
         String pw = "";
@@ -135,6 +140,38 @@ public class JDBCDemo2 {
         } catch (SQLException e) {
             System.out.println("Fehler " + e.getMessage());
 
+        }
+    }
+
+    /**
+     * Gibt alle Datensätze aus die den eingegebenen String beinhalten
+     * @param suche Suchstring
+     */
+    public static void selectHobbyLike(String suche){
+        System.out.println("---------------------selectHobbyLike---------------------");
+        String connectionURL = "jdbc:mysql://localhost:3306/jdbcdemo";
+        String user = "root";
+        String pw = "";
+
+        try (Connection conn = DriverManager.getConnection(connectionURL, user, pw)) {
+            String sqlstatement = "SELECT * FROM `hobbies` WHERE `hobbies`.`bezeichnung` LIKE ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(sqlstatement);
+            try {
+                preparedStatement.setString(1, "%"+suche+"%");
+                ResultSet rs = preparedStatement.executeQuery();
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String bezeichnung = rs.getString("bezeichnung");
+                    BigDecimal betrag = rs.getBigDecimal("beitrag");
+                    System.out.printf("Hobby: ID %d, Bezeichnung: %s, Betrag: %s %n", id, bezeichnung, betrag.toString());
+                }
+
+            } catch (SQLException e) {
+                System.out.println("Fehler bei der Suche " + e.getMessage());
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Fehler " + e.getMessage());
         }
     }
 }
