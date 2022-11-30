@@ -415,6 +415,44 @@ public abstract class BaseEntity  {
      }
 }
 ```
+### DAO Interfaces
+
+Zu beginn wird ein Interface erstellt, dass als Base Repository dient und generische Typen verwendet.
+```java
+/**
+ * Das Interface BaseRepository verwendet generische Typen und beinhaltet nur die CRUD Methodenköpfe.
+ * @param <T> Entität
+ * @param <I> ID der Entität
+ */
+public interface BaseRepository<T,I> {
+    Optional<T> insert(T entity);
+    Optional<T> getById(I id);
+    List<T> getAll();
+    Optional<T> update(T entity);
+    void deleteById(I id);
+
+}
+```
+Dieses Interface wird von MyCourseRepository geerbt. MyCourseRepository implementiert weitere Methodenköpfe.
+```java
+/**
+ * Das Interface MyCourseRepository ist das DAO Interface und erbt von dem BaseRepository. Bei der Vererbung ist zu beachten, dass die Typen deklariert werden.
+ * In diesem Interface werden weitere spezifischere Methodenköpfe hinzugefügt.
+ */
+public interface MyCourseRepository extends BaseRepository<Course, Long>{
+ 
+    List<Course> findAllCoursesByName(String name);
+    List<Course> findAllCoursesByDescription(String description);
+    List<Course> findAllCoursesByDescriptionOrName(String searchText);
+    List<Course> findAllCoursesByCourseType(CourseType courseType);
+    List<Course> findAllCoursesByStartDate(Date startDate);
+    List<Course> findAllRunningCourses();
+}
+```
+### GetAll
+
+
+
 
 
 

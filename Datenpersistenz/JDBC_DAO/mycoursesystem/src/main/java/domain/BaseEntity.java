@@ -1,7 +1,7 @@
 package domain;
 
 /**
- * Die Klasse BaseEntity dient als Mutterklasse konkreter Entitäten wie zum Beispiel Course
+ * Die Klasse BaseEntity dient als Mutterklasse konkreter Entitäten wie zum Beispiel Course.
  * Alle weiteren Entitäten besitzen eine ID.
  */
 public abstract class BaseEntity  {
