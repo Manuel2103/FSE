@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b98e7a4f-1393-4bab-97ef-a337ee52d774" name="Changes" comment="JDBC Demo 2 Hobby mit einem eingegebenen String suchen">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../JDBC_DAO/mycoursesystem/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -93,6 +93,7 @@
       <workItem from="1669193139566" duration="4929000" />
       <workItem from="1669204906563" duration="1666000" />
       <workItem from="1669451066448" duration="3038000" />
+      <workItem from="1669793928610" duration="88000" />
     </task>
     <task id="LOCAL-00001" summary="Entwicklungsumgebung einrichten (JDBC Dependency hinzugfügt), Erste Verbindung zur Datenbank hergestellt">
       <created>1669191666386</created>
