@@ -303,9 +303,51 @@ Nun werden die einzelnen Funktionen dargestellt.
 
 ## JDBC UND DAO – STUDENTEN
 
+In diesem Abschnitt werden CRUD (Create, Read, Update, Delete) Operationen mithilfe des DAO Patterns implementiert.
+
 ### DAO
 
+Data Access Object (DAO) ist ein Entwurfsmuster, das den Zugriff auf unterschiedliche Arten von Datenquellen (z. B. Datenbanken, Dateisystem) so kapselt, dass die angesprochene Datenquelle ausgetauscht werden kann, ohne dass der aufrufende Code geändert werden muss.
 
+### Projektsetup
+
+Zu beginn wird eine Datenbank die Kurssystem Datenbank erstellt, die eine Tabelle besitzt. 
+
+![](img/Tabelle_courses.png)
+
+Danach wird ein neues IntelliJ Projekt erstellt. Dabei wird Java und Maven verwendet. Dazu kommt noch, dass die MySQL Connector Java Dependency in die pom.xml hinzugefügt wird.
+```xml
+<dependency>
+    <groupId>com.mysql</groupId>
+    <artifactId>mysql-connector-j</artifactId>
+    <version>8.0.31</version>
+</dependency>
+```
+
+### DB Verbindung Singleton
+
+Das Singleton Pattern behilft uns Codeduplikate zu vermeiden, indem man die Verbindung zur Datenbank in eine Klasse auslagert. Der Code schaut wie folgt aus:
+```java
+public class MysqlDatabaseConnection {
+    private static Connection con = null;
+    //privater Konstruktor, da kein Objekt von dieser Klasse erstellt werden soll. 
+    private MysqlDatabaseConnection(){
+    }
+
+    //Gibt uns ein Objekt vom Typ Connection zurück oder eine Exception wird geworfen, wenn keine Verbindung hergestellt werden kann oder die Driver nicht verfügbar sind.
+    public static Connection getConnection(String url, String user, String pwd) throws ClassNotFoundException, SQLException {
+        //Prüfen ob eine Verbindung schon besteht
+        if(con!=null){
+            return con;
+        }else{
+            //Prüfen ob der Driver verfügbar ist
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection(url, user,pwd);
+            return con;
+        }
+    }
+}
+```
 
 
 
