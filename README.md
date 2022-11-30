@@ -348,6 +348,11 @@ public class MysqlDatabaseConnection {
     }
 }
 ```
+### UI
+
+Als UI wird die CLI verwendet. Dafür wurde eine Klasse erstellt die den Benutzer Auswahlmöglichkeiten bietet. 
+
+
 
 
 
