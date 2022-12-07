@@ -451,7 +451,100 @@ public interface MyCourseRepository extends BaseRepository<Course, Long>{
 ```
 ### GetAll
 
+Es wird die Funktion getAll implementiert. Dabei werden alle Kurse aus der Datenbank ausgelesen. Wird werden die Daten zu einem Objekt gemapped.
+```java
+    /**
+     * Erstellt eine Liste von Courses und gibt diese zurück
+     * @return Liste von courses
+     */
+    @Override
+    public List<Course> getAll() {
+        String sql = "SELECT * FROM `courses`";
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            ArrayList<Course> courseList = new ArrayList<>();
+            while (resultSet.next()) {
+                //Die Daten, die von der Datenbank kommen, werden einem neuen Course übergeben und in eine Liste hinzugefügt.
+                //Objektrelationales Mapping
+                courseList.add(new Course(
+                                resultSet.getLong("id"),
+                                resultSet.getString("name"),
+                                resultSet.getString("description"),
+                                resultSet.getInt("hours"),
+                                resultSet.getDate("begindate"),
+                                resultSet.getDate("enddate"),
+                                CourseType.valueOf(resultSet.getString("coursetype"))
+                        )
+                );
+            }
+            return courseList;
+        } catch (SQLException e) {
+            throw new DatabaseException("Database error occured!");
+        }
 
+    }
+```
+### getById
+
+Durch das Suchen mit einer ID wird eine Course im Detail angezeigt. 
+
+```java
+    /**
+     * Gibt einen Course zurück, der zuvor durch die ID eindeutig bestimmt worden ist.
+     * @param id ID des zur suchenden Course
+     * @return Course
+     */
+    @Override
+    public Optional<Course> getById(Long id) {
+        //Utility Klasse für die NULL Prüfung der ID
+        Assert.notNull(id);
+        //Mithilfe einer Hilfsmethode wird geprüft, ob ein mit dieser ID existiert.
+        if(countCoursesInDbWithId(id)==0){
+            return Optional.empty();
+        }else{
+            try {
+                String sql = "SELECT * FROM `courses` WHERE `id` = ? ";
+                PreparedStatement preparedStatement = con.prepareStatement(sql);
+                preparedStatement.setLong(1, id);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                resultSet.next();
+                //Erstellen eines Course Objekts mit dem Ergebnis der Abfrage
+                Course course = new Course(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getInt("hours"),
+                        resultSet.getDate("begindate"),
+                        resultSet.getDate("enddate"),
+                        CourseType.valueOf(resultSet.getString("coursetype"))
+                );
+                return Optional.of(course);
+
+            }catch (SQLException sqlException){
+                throw new DatabaseException(sqlException.getMessage());
+            }
+        }
+    }
+    /**
+     * Hilfmethode die überprüft, ob ein Course mit der ID verfügbar ist.
+     * @param id ID eines Course
+     * @return Anzahl der Ergebnisse
+     */
+    private int countCoursesInDbWithId(Long id){
+        try {
+            String countSql = "SELECT COUNT(*) FROM `courses`WHERE `id`=?";
+            PreparedStatement preparedStatement = con.prepareStatement(countSql);
+            preparedStatement.setLong(1,id);
+            ResultSet resultSetCount = preparedStatement.executeQuery();
+            resultSetCount.next();
+            int coursecount = resultSetCount.getInt(1);
+            return coursecount;
+        }catch (SQLException sqlException){
+            throw new DatabaseException(sqlException.getMessage());
+        }
+    }
+```
 
 
 

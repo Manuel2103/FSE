@@ -3,7 +3,7 @@ package dataaccess;
 import domain.Course;
 import domain.CourseType;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 /**
