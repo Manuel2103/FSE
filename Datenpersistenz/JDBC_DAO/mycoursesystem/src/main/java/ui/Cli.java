@@ -1,24 +1,28 @@
 package ui;
 
 import dataaccess.DatabaseException;
+import dataaccess.MyBuchungRepository;
 import dataaccess.MyCourseRepository;
-import dataaccess.MySqlCourseRepository;
-import domain.Course;
-import domain.CourseType;
-import domain.InvalidValueException;
+import dataaccess.MyStudentRepository;
+import domain.*;
 
-import java.sql.SQLOutput;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
 public class Cli {
     private Scanner scan;
-    private MyCourseRepository repo;
+    private MyCourseRepository courseRepo;
+    private MyStudentRepository studentRepo;
 
-    public Cli(MyCourseRepository repo) {
-        this.repo = repo;
+    private MyBuchungRepository buchungRepo;
+
+    public Cli(MyCourseRepository repo, MyStudentRepository studentRepo, MyBuchungRepository buchungRepo) {
+        this.courseRepo = repo;
+        this.studentRepo = studentRepo;
+        this.buchungRepo = buchungRepo;
         this.scan = new Scanner(System.in);
     }
 
@@ -49,6 +53,15 @@ public class Cli {
                 case "7":
                     runningCourses();
                     break;
+                case "8":
+                    showAllStudents();
+                    break;
+                case "9":
+                    showAllStudents();
+                    break;
+                case "10":
+                    showAllBuchungen();
+                    break;
                 case "x":
                     System.out.println("Auf Wiedersehen");
                     break;
@@ -60,6 +73,43 @@ public class Cli {
         scan.close();
     }
 
+    private void showAllBuchungen() {
+        List<Buchung> buchungList;
+
+        try {
+            buchungList = buchungRepo.getAll();
+            for(Buchung buchung : buchungList){
+                System.out.println(buchung);
+            }
+
+        }catch (DatabaseException databaseException){
+            System.out.println("Datenbankfehler: " + databaseException);
+        }catch (Exception e){
+            System.out.println("Unbekannter Fehler: " + e.getMessage());
+        }
+
+    }
+
+    private void showAllStudents() {
+        List<Student> studentList = null;
+        try {
+            studentList = studentRepo.getAll();
+            if(studentList==null){
+                System.out.println("Keine Studenten vorhanden!");
+            }else{
+                for (Student student : studentList){
+                    System.out.println(student.toString());
+                }
+            }
+        }catch (DatabaseException databaseException){
+            System.out.println("Datenbankfehler: " + databaseException);
+        }catch (Exception e){
+            System.out.println("Unbekannter Fehelr" + e.getMessage());
+        }
+
+
+    }
+
     /**
      * In dieser UI Methode werden die laufenden Kurse ausgegebenen.
      */
@@ -67,7 +117,7 @@ public class Cli {
         System.out.println("Aktuell laufende Kurse: ");
         List<Course> list;
         try {
-            list = repo.findAllRunningCourses();
+            list = courseRepo.findAllRunningCourses();
             if (list == null) {
                 System.out.println("Keine laufenden Kurse");
             } else {
@@ -90,7 +140,7 @@ public class Cli {
         String searchString = scan.nextLine();
         List<Course> coursesList;
         try {
-            coursesList = repo.findAllCoursesByDescriptionOrName(searchString);
+            coursesList = courseRepo.findAllCoursesByDescriptionOrName(searchString);
             for (Course course : coursesList) {
                 System.out.println(course);
             }
@@ -110,7 +160,7 @@ public class Cli {
         System.out.println("Welchen Course möchten sie löschen? Bitte ID eingeben: ");
         Long courseIdToDelete = Long.parseLong(scan.nextLine());
         try {
-            repo.deleteById(courseIdToDelete);
+            courseRepo.deleteById(courseIdToDelete);
         } catch (IllegalArgumentException illegalArgumentException) {
             System.out.println("Eingabefehler: " + illegalArgumentException.getMessage());
         } catch (DatabaseException databaseException) {
@@ -128,7 +178,7 @@ public class Cli {
         System.out.println("Für welche Course ID möchten Sie die CourseDetails ändern?");
         Long courseID = Long.parseLong(scan.nextLine());
         try {
-            Optional<Course> courseOptional = repo.getById(courseID);
+            Optional<Course> courseOptional = courseRepo.getById(courseID);
             if (courseOptional.isEmpty()) {
                 System.out.println("Kurs mit der ID nicht vorhanden!");
             } else {
@@ -150,7 +200,7 @@ public class Cli {
                 System.out.println("Kurstyp (ZA/BF/FF/OE): ");
                 courseType = scan.nextLine();
 
-                Optional<Course> optionalCourseUpdated = repo.update(
+                Optional<Course> optionalCourseUpdated = courseRepo.update(
                         new Course(
                                 course.getId(),
                                 //Kurzschreibweise eines ifelse
@@ -201,7 +251,7 @@ public class Cli {
             System.out.println("Kurstyp: (ZA/BD/FF/OE): ");
             courseType = CourseType.valueOf(scan.nextLine());
             //Verwendet die insert Methode des repos, um einen Kurs zu erstellen.
-            Optional<Course> optionalCourse = repo.insert(
+            Optional<Course> optionalCourse = courseRepo.insert(
                     new Course(name, description, hours, dateFrom, dateTo, courseType)
             );
             if (optionalCourse.isPresent()) {
@@ -228,7 +278,7 @@ public class Cli {
         Long courseId = Long.parseLong(scan.nextLine());
         try {
             //Aufruf der Funktion getByID
-            Optional<Course> courseOptional = repo.getById(courseId);
+            Optional<Course> courseOptional = courseRepo.getById(courseId);
             //Prüfen, ob ein Course zurückgegeben worden ist.
             if (courseOptional.isPresent()) {
                 System.out.println(courseOptional.get());
@@ -247,7 +297,7 @@ public class Cli {
 
         List<Course> list = null;
         try {
-            list = repo.getAll();
+            list = courseRepo.getAll();
             if (list.size() > 0) {
                 for (Course course : list) {
                     System.out.println(course);
@@ -269,6 +319,10 @@ public class Cli {
     private void showMenue() {
         System.out.println("--------- Kursmanagment ---------");
         System.out.println("(1) Kurs eingeben \t (2) Alle Kurse anzeigen \t (3) Kursdetails anzeigen \t (4) Kursdetails ändern \t (5) Kursdetails anzeigen \t (6) Kursuche \t (7) Kursuche \t");
+        System.out.println("--------- Studentenmanagment ---------");
+        System.out.println("(8) Alle Studenten anzeigen");
+        System.out.println("--------- Buchungsmanagment ---------");
+        System.out.println("(9) Buchung erstellen \t (10) Alle Buchungen ausgeben");
         System.out.println("(x) Ende");
     }
 
