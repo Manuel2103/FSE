@@ -18,7 +18,7 @@ Manuel Foidl
     - [Daten löschen](#daten-löschen)
     - [Daten abfragen 2](#daten-abfragen-2)
   - [JDBC Intro Teil 2](#jdbc-intro-teil-2)
-  - [JDBC UND DAO – STUDENTEN](#jdbc-und-dao--studenten)
+  - [JDBC UND DAO](#jdbc-und-dao)
     - [DAO](#dao)
     - [Projektsetup](#projektsetup)
     - [DB Verbindung Singleton](#db-verbindung-singleton)
@@ -32,6 +32,7 @@ Manuel Foidl
     - [Delete](#delete)
     - [CourseSearch](#coursesearch)
     - [Running Courses](#running-courses)
+  - [JDBC UND DAO BUCHUNGEN](#jdbc-und-dao-buchungen)
 
 
 # Datenpersistenz (JDBC)
@@ -327,7 +328,7 @@ Nun werden die einzelnen Funktionen dargestellt.
 ```
 
 
-## JDBC UND DAO – STUDENTEN
+## JDBC UND DAO
 
 In diesem Abschnitt werden CRUD (Create, Read, Update, Delete) Operationen mithilfe des DAO Patterns implementiert.
 
@@ -849,6 +850,66 @@ Mit dieser Methode werden Kurse gesucht, die den mitgegebenen String beinhalten.
     }
 ```
 ### Running Courses
+Es werden die laufenden Kurse gesucht und auf der CLI ausgegeben.
+
+```java 
+    /**
+     * Sucht in der Tabelle Kurse die noch laufen als Enddatum > Heute
+     * @return Liste der laufenden Kurse
+     */
+    @Override
+    public List<Course> findAllRunningCourses() {
+        String sql = "SELECT * FROM `courses` WHERE NOW()<`enddate`";
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            ArrayList<Course> courseList = new ArrayList<>();
+            while (resultSet.next()) {
+                courseList.add(new Course(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getInt("hours"),
+                        resultSet.getDate("begindate"),
+                        resultSet.getDate("enddate"),
+                        CourseType.valueOf(resultSet.getString("coursetype"))
+                ));
+            }
+            return courseList;
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
+    }
+    /**
+     * In dieser UI Methode werden die laufenden Kurse ausgegebenen.
+     */
+    private void runningCourses() {
+        System.out.println("Aktuell laufende Kurse: ");
+        List<Course> list;
+        try {
+            list = repo.findAllRunningCourses();
+            if (list == null) {
+                System.out.println("Keine laufenden Kurse");
+            } else {
+                for (Course course : list) {
+                    System.out.println(course);
+                }
+            }
+        } catch (DatabaseException databaseException) {
+            System.out.println("Datenbankfehler bei laufende Kurse: " + databaseException.getMessage());
+        } catch (Exception exception) {
+            System.out.println("Unbekannter Fehler: " + exception.getMessage());
+        }
+    }
+```
+
+## JDBC UND DAO BUCHUNGEN 
+Gib einen textuellen Vorschlag hab, wie man die bisher programmierte Applikation für die Buchung von Kursen durch Studenten erweitern könnte. 
+
+Zuerst sollten zwei neue Tabellen in der Datenbank erstellt werden.
+Tabelle Studenten: In dieser Tabelle werden die Studenten gespeichert.
+Tabelle Buchungen: Dies ist die Auflösungstabelle, da Studenten und Courses eine m:n Beziehung haben. Sie beinhaltet die Primärschlüssel der beiden Tabellen als Fremdschlüssel.
+
 
 
 

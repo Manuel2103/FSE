@@ -46,6 +46,9 @@ public class Cli {
                 case "6":
                     courseSearch();
                     break;
+                case "7":
+                    runningCourses();
+                    break;
                 case "x":
                     System.out.println("Auf Wiedersehen");
                     break;
@@ -58,6 +61,28 @@ public class Cli {
     }
 
     /**
+     * In dieser UI Methode werden die laufenden Kurse ausgegebenen.
+     */
+    private void runningCourses() {
+        System.out.println("Aktuell laufende Kurse: ");
+        List<Course> list;
+        try {
+            list = repo.findAllRunningCourses();
+            if (list == null) {
+                System.out.println("Keine laufenden Kurse");
+            } else {
+                for (Course course : list) {
+                    System.out.println(course);
+                }
+            }
+        } catch (DatabaseException databaseException) {
+            System.out.println("Datenbankfehler bei laufende Kurse: " + databaseException.getMessage());
+        } catch (Exception exception) {
+            System.out.println("Unbekannter Fehler: " + exception.getMessage());
+        }
+    }
+
+    /**
      * UI Methode für die Suche eines Kurses der eine bestimmte Zeichenkette in der Beschreibung oder Namen besitzt.
      */
     private void courseSearch() {
@@ -66,14 +91,14 @@ public class Cli {
         List<Course> coursesList;
         try {
             coursesList = repo.findAllCoursesByDescriptionOrName(searchString);
-            for (Course course : coursesList){
+            for (Course course : coursesList) {
                 System.out.println(course);
             }
 
-        }catch (DatabaseException databaseException){
+        } catch (DatabaseException databaseException) {
             System.out.println("Datenbankfehler bei der Suche: " + databaseException.getMessage());
 
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Unbekannter Fehler bei der Kursuche: " + e.getMessage());
         }
     }
@@ -171,7 +196,7 @@ public class Cli {
             hours = Integer.parseInt(scan.nextLine());
             System.out.println("Startdatum (YYYY-MM-DD): ");
             dateFrom = Date.valueOf(scan.nextLine());
-            System.out.println("Startdatum (YYYY-MM-DD): ");
+            System.out.println("Enddatum (YYYY-MM-DD): ");
             dateTo = Date.valueOf(scan.nextLine());
             System.out.println("Kurstyp: (ZA/BD/FF/OE): ");
             courseType = CourseType.valueOf(scan.nextLine());
@@ -243,7 +268,7 @@ public class Cli {
 
     private void showMenue() {
         System.out.println("--------- Kursmanagment ---------");
-        System.out.println("(1) Kurs eingeben \t (2) Alle Kurse anzeigen \t (3) Kursdetails anzeigen \t (4) Kursdetails ändern \t (5) Kursdetails anzeigen \t (6) Kursuche \t");
+        System.out.println("(1) Kurs eingeben \t (2) Alle Kurse anzeigen \t (3) Kursdetails anzeigen \t (4) Kursdetails ändern \t (5) Kursdetails anzeigen \t (6) Kursuche \t (7) Kursuche \t");
         System.out.println("(x) Ende");
     }
 
