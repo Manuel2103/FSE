@@ -29,6 +29,9 @@ Manuel Foidl
     - [getById](#getbyid)
     - [Insert](#insert)
     - [Update](#update)
+    - [Delete](#delete)
+    - [CourseSearch](#coursesearch)
+    - [Running Courses](#running-courses)
 
 
 # Datenpersistenz (JDBC)
@@ -751,10 +754,101 @@ CLI implementierte Funktion:
         }
     }
 ```
+### Delete
+Die Methode deleteByID löscht einen Course, der die mitgegebene ID besitzt.
+Das SQL DELETE Statement wirft keinen Fehler, wenn die nicht vorhanden ist (löscht einfach nichts).
+```java 
+/**
+     * Löscht einen Course mithilfe der ID
+     * @param id ID des zu löschenden Course
+     */
+    @Override
+    public void deleteById(Long id) {
+        Assert.notNull(id);
+        String sql = "DELETE FROM `courses`WHERE `id` = ?";
+        try {
+            if (countCoursesInDbWithId(id) == 1) {
+                PreparedStatement preparedStatement = con.prepareStatement(sql);
+                preparedStatement.setLong(1, id);
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
+    }
+    /**
+     * UI Methode für das Löschen eines Kurses
+     */
+    private void deleteCourse() {
+        System.out.println("Welchen Course möchten sie löschen? Bitte ID eingeben: ");
+        Long courseIdToDelete = Long.parseLong(scan.nextLine());
+        try {
+            repo.deleteById(courseIdToDelete);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            System.out.println("Eingabefehler: " + illegalArgumentException.getMessage());
+        } catch (DatabaseException databaseException) {
+            System.out.println("Datenbankfehler beim Einfügen: " + databaseException.getMessage());
+        } catch (Exception exception) {
+            System.out.println("unbekannter Fehler: " + exception.getMessage());
+        }
+    }
+```
+### CourseSearch
+Mit dieser Methode werden Kurse gesucht, die den mitgegebenen String beinhalten.
+```java 
+    /**
+     * Sucht in der Tabelle Courses Kurse die, die mitgegebene Zeichenkette im Namen oder in der Beschreibung besitzen.
+     * @param searchText Suchstring
+     * @return Liste von Course
+     */
+    @Override
+    public List<Course> findAllCoursesByDescriptionOrName(String searchText) {
+        try {
+            String sql = "SELECT * FROM `courses` WHERE LOWER(`description`) LIKE LOWER (?) or LOWER (`name`) LIKE (?)";
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, "%"+searchText+"%");
+            preparedStatement.setString(2, "%"+searchText+"%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            ArrayList<Course> courseList = new ArrayList<>();
+            while (resultSet.next())
+            {
+                courseList.add(new Course(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getInt("hours"),
+                        resultSet.getDate("begindate"),
+                        resultSet.getDate("enddate"),
+                        CourseType.valueOf(resultSet.getString("coursetype"))
+                ));
+            }
+            return courseList;
+        }catch (SQLException sqlException){
+            throw new DatabaseException(sqlException.getMessage());
+        }
+    }
+    /**
+     * UI Methode für die Suche eines Kurses der eine bestimmte Zeichenkette in der Beschreibung oder Namen besitzt.
+     */
+    private void courseSearch() {
+        System.out.println("Geben Sie einen Suchbegriff an!");
+        String searchString = scan.nextLine();
+        List<Course> coursesList;
+        try {
+            coursesList = repo.findAllCoursesByDescriptionOrName(searchString);
+            for (Course course : coursesList){
+                System.out.println(course);
+            }
 
+        }catch (DatabaseException databaseException){
+            System.out.println("Datenbankfehler bei der Suche: " + databaseException.getMessage());
 
-
-
+        }catch (Exception e){
+            System.out.println("Unbekannter Fehler bei der Kursuche: " + e.getMessage());
+        }
+    }
+```
+### Running Courses
 
 
 

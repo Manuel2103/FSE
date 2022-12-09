@@ -40,6 +40,12 @@ public class Cli {
                 case "4":
                     updateCourseDetails();
                     break;
+                case "5":
+                    deleteCourse();
+                    break;
+                case "6":
+                    courseSearch();
+                    break;
                 case "x":
                     System.out.println("Auf Wiedersehen");
                     break;
@@ -52,6 +58,44 @@ public class Cli {
     }
 
     /**
+     * UI Methode für die Suche eines Kurses der eine bestimmte Zeichenkette in der Beschreibung oder Namen besitzt.
+     */
+    private void courseSearch() {
+        System.out.println("Geben Sie einen Suchbegriff an!");
+        String searchString = scan.nextLine();
+        List<Course> coursesList;
+        try {
+            coursesList = repo.findAllCoursesByDescriptionOrName(searchString);
+            for (Course course : coursesList){
+                System.out.println(course);
+            }
+
+        }catch (DatabaseException databaseException){
+            System.out.println("Datenbankfehler bei der Suche: " + databaseException.getMessage());
+
+        }catch (Exception e){
+            System.out.println("Unbekannter Fehler bei der Kursuche: " + e.getMessage());
+        }
+    }
+
+    /**
+     * UI Methode für das Löschen eines Kurses
+     */
+    private void deleteCourse() {
+        System.out.println("Welchen Course möchten sie löschen? Bitte ID eingeben: ");
+        Long courseIdToDelete = Long.parseLong(scan.nextLine());
+        try {
+            repo.deleteById(courseIdToDelete);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            System.out.println("Eingabefehler: " + illegalArgumentException.getMessage());
+        } catch (DatabaseException databaseException) {
+            System.out.println("Datenbankfehler beim Einfügen: " + databaseException.getMessage());
+        } catch (Exception exception) {
+            System.out.println("unbekannter Fehler: " + exception.getMessage());
+        }
+    }
+
+    /**
      * Der Benutzer wird gefragt, welchen Kurs er updaten will.
      * Nach einer Prüfung, ob der Kurs vorhanden ist, können die Daten eingegeben werden.
      */
@@ -60,9 +104,9 @@ public class Cli {
         Long courseID = Long.parseLong(scan.nextLine());
         try {
             Optional<Course> courseOptional = repo.getById(courseID);
-            if(courseOptional.isEmpty()){
+            if (courseOptional.isEmpty()) {
                 System.out.println("Kurs mit der ID nicht vorhanden!");
-            }else{
+            } else {
                 Course course = courseOptional.get();
                 System.out.println("Änderungen für folgenden Kurs: ");
                 System.out.println(course);
@@ -86,21 +130,21 @@ public class Cli {
                                 course.getId(),
                                 //Kurzschreibweise eines ifelse
                                 name.equals("") ? course.getName() : name,
-                                description.equals("") ? course.getDescription():description,
-                                hours.equals("") ? course.getHours(): Integer.parseInt(hours),
-                                dateFrom.equals("") ? course.getBeginDate(): Date.valueOf(dateFrom),
-                                dateTo.equals("") ? course.getEndDate(): Date.valueOf(dateTo),
+                                description.equals("") ? course.getDescription() : description,
+                                hours.equals("") ? course.getHours() : Integer.parseInt(hours),
+                                dateFrom.equals("") ? course.getBeginDate() : Date.valueOf(dateFrom),
+                                dateTo.equals("") ? course.getEndDate() : Date.valueOf(dateTo),
                                 courseType.equals("") ? course.getCourseType() : CourseType.valueOf(courseType)
                         )
                 );
                 //Funktionale Funktion eines Optionals
                 optionalCourseUpdated.ifPresentOrElse(
-                        (c)-> System.out.println("kurs aktualisiert: " + c),
-                        ()-> System.out.println("Kurs konnte nicht aktualisiert werden!")
+                        (c) -> System.out.println("kurs aktualisiert: " + c),
+                        () -> System.out.println("Kurs konnte nicht aktualisiert werden!")
                 );
             }
 
-        }catch (Exception exception){
+        } catch (Exception exception) {
             System.out.println("Unbekannter Fehler bei Kursupdate: " + exception.getMessage());
         }
     }
@@ -199,7 +243,7 @@ public class Cli {
 
     private void showMenue() {
         System.out.println("--------- Kursmanagment ---------");
-        System.out.println("(1) Kurs eingeben \t (2) Alle Kurse anzeigen \t (3) Kursdetails anzeigen \t (4) Kursdetails ändern \t");
+        System.out.println("(1) Kurs eingeben \t (2) Alle Kurse anzeigen \t (3) Kursdetails anzeigen \t (4) Kursdetails ändern \t (5) Kursdetails anzeigen \t (6) Kursuche \t");
         System.out.println("(x) Ende");
     }
 

@@ -148,6 +148,7 @@ public class MySqlCourseRepository implements MyCourseRepository {
 
     /**
      * Aktualisiert einen Course in der Datenbank.
+     *
      * @param entity Course der veränder werden soll
      * @return Optional von Type Course
      */
@@ -183,8 +184,23 @@ public class MySqlCourseRepository implements MyCourseRepository {
         }
     }
 
+    /**
+     * Löscht einen Course mithilfe der ID
+     * @param id ID des zu löschenden Course
+     */
     @Override
     public void deleteById(Long id) {
+        Assert.notNull(id);
+        String sql = "DELETE FROM `courses`WHERE `id` = ?";
+        try {
+            if (countCoursesInDbWithId(id) == 1) {
+                PreparedStatement preparedStatement = con.prepareStatement(sql);
+                preparedStatement.setLong(1, id);
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
 
     }
 
@@ -198,9 +214,38 @@ public class MySqlCourseRepository implements MyCourseRepository {
         return null;
     }
 
+    /**
+     * Sucht in der Tabelle Courses Kurse die, die mitgegebene Zeichenkette im Namen oder in der Beschreibung besitzen.
+     * @param searchText Suchstring
+     * @return Liste von Course
+     */
     @Override
     public List<Course> findAllCoursesByDescriptionOrName(String searchText) {
-        return null;
+
+        try {
+            String sql = "SELECT * FROM `courses` WHERE LOWER(`description`) LIKE LOWER (?) or LOWER (`name`) LIKE (?)";
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, "%"+searchText+"%");
+            preparedStatement.setString(2, "%"+searchText+"%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            ArrayList<Course> courseList = new ArrayList<>();
+            while (resultSet.next())
+            {
+                courseList.add(new Course(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getInt("hours"),
+                        resultSet.getDate("begindate"),
+                        resultSet.getDate("enddate"),
+                        CourseType.valueOf(resultSet.getString("coursetype"))
+                ));
+            }
+            return courseList;
+
+        }catch (SQLException sqlException){
+            throw new DatabaseException(sqlException.getMessage());
+        }
     }
 
     @Override
