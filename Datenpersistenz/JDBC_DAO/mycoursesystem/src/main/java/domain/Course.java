@@ -126,6 +126,7 @@ public class Course extends BaseEntity {
 
     }
 
+
     @Override
     public String toString() {
         return "Course{" +

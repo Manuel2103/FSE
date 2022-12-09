@@ -18,10 +18,16 @@ public class MySqlCourseRepository implements MyCourseRepository {
         this.con = MysqlDatabaseConnection.getConnection("jdbc:mysql://localhost:3306/kurssystem", "root", "");
     }
 
+    /**
+     * Fügt einen Course zur Datenbank hinzu.
+     *
+     * @param entity das Course Objekt das hinzugefügt werden soll
+     * @return ein Optional vom Typ Course.
+     */
     @Override
     public Optional<Course> insert(Course entity) {
         Assert.notNull(entity);
-        try{
+        try {
             //Objektrelationales Mapping
             String sql = "INSERT INTO `courses` (`name`, `description`, `hours`, `begindate`, `enddate`, `coursetype`) VALUES (?,?,?,?,?,?)";
             PreparedStatement preparedStatement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -31,29 +37,27 @@ public class MySqlCourseRepository implements MyCourseRepository {
             preparedStatement.setDate(4, entity.getBeginDate());
             preparedStatement.setDate(5, entity.getEndDate());
             preparedStatement.setString(6, entity.getCourseType().toString());
-
             int affectedRows = preparedStatement.executeUpdate();
-            if(affectedRows == 0){
+            //Prüfen, ob das Einfügen funktioniert hat.
+            if (affectedRows == 0) {
                 return Optional.empty();
             }
+            //Die neu erstellte ID lassen wir uns zurückgeben.
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            if (generatedKeys.next()){
+            if (generatedKeys.next()) {
+                //Für die Rückgabe verwenden wird die zuvor erstellte Funktion getById
                 return this.getById(generatedKeys.getLong(1));
-            }else{
+            } else {
                 return Optional.empty();
             }
-
-
-        }catch (SQLException sqlException){
+        } catch (SQLException sqlException) {
             throw new DatabaseException(sqlException.getMessage());
-
         }
-
-
     }
 
     /**
      * Gibt einen Course zurück, der zuvor durch die ID eindeutig bestimmt worden ist.
+     *
      * @param id ID des zur suchenden Course
      * @return Course
      */
@@ -62,9 +66,9 @@ public class MySqlCourseRepository implements MyCourseRepository {
         //Utility Klasse für die NULL Prüfung der ID
         Assert.notNull(id);
         //Mithilfe einer Hilfsmethode wird geprüft, ob ein mit dieser ID existiert.
-        if(countCoursesInDbWithId(id)==0){
+        if (countCoursesInDbWithId(id) == 0) {
             return Optional.empty();
-        }else{
+        } else {
             try {
                 String sql = "SELECT * FROM `courses` WHERE `id` = ? ";
                 PreparedStatement preparedStatement = con.prepareStatement(sql);
@@ -83,7 +87,7 @@ public class MySqlCourseRepository implements MyCourseRepository {
                 );
                 return Optional.of(course);
 
-            }catch (SQLException sqlException){
+            } catch (SQLException sqlException) {
                 throw new DatabaseException(sqlException.getMessage());
             }
         }
@@ -91,25 +95,27 @@ public class MySqlCourseRepository implements MyCourseRepository {
 
     /**
      * Hilfmethode die überprüft, ob ein Course mit der ID verfügbar ist.
+     *
      * @param id ID eines Course
      * @return Anzahl der Ergebnisse
      */
-    private int countCoursesInDbWithId(Long id){
+    private int countCoursesInDbWithId(Long id) {
         try {
             String countSql = "SELECT COUNT(*) FROM `courses`WHERE `id`=?";
             PreparedStatement preparedStatement = con.prepareStatement(countSql);
-            preparedStatement.setLong(1,id);
+            preparedStatement.setLong(1, id);
             ResultSet resultSetCount = preparedStatement.executeQuery();
             resultSetCount.next();
             int coursecount = resultSetCount.getInt(1);
             return coursecount;
-        }catch (SQLException sqlException){
+        } catch (SQLException sqlException) {
             throw new DatabaseException(sqlException.getMessage());
         }
     }
 
     /**
      * Erstellt eine Liste von Courses und gibt diese zurück
+     *
      * @return Liste von courses
      */
     @Override
@@ -140,9 +146,41 @@ public class MySqlCourseRepository implements MyCourseRepository {
 
     }
 
+    /**
+     * Aktualisiert einen Course in der Datenbank.
+     * @param entity Course der veränder werden soll
+     * @return Optional von Type Course
+     */
     @Override
     public Optional<Course> update(Course entity) {
-        return Optional.empty();
+
+        Assert.notNull(entity);
+
+        String sql = "UPDATE `courses` SET `name` = ?, `description` = ?, `hours` = ?, `begindate` = ?, `enddate` = ?, `coursetype` = ? WHERE `courses`.`id` = ?";
+        //Prüfen, ob der mitgegebene Course in der Datenbank existiert.
+        if (countCoursesInDbWithId(entity.getId()) == 0) {
+            return Optional.empty();
+        } else {
+            try {
+                PreparedStatement preparedStatement = con.prepareStatement(sql);
+                preparedStatement.setString(1, entity.getName());
+                preparedStatement.setString(2, entity.getDescription());
+                preparedStatement.setInt(3, entity.getHours());
+                preparedStatement.setDate(4, entity.getBeginDate());
+                preparedStatement.setDate(5, entity.getEndDate());
+                preparedStatement.setString(6, entity.getCourseType().toString());
+                preparedStatement.setLong(7, entity.getId());
+
+                int affectedRows = preparedStatement.executeUpdate();
+                if (affectedRows == 0) {
+                    return Optional.empty();
+                } else {
+                    return this.getById(entity.getId());
+                }
+            } catch (SQLException sqlException) {
+                throw new DatabaseException(sqlException.getMessage());
+            }
+        }
     }
 
     @Override

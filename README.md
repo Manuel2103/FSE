@@ -6,7 +6,30 @@ Manuel Foidl
 
 # Inhaltsverzeichnis
 
-* [Datenpersistenz](#datenpersistenz-(jdbc))
+- [FSE](#fse)
+- [Inhaltsverzeichnis](#inhaltsverzeichnis)
+- [Datenpersistenz (JDBC)](#datenpersistenz-jdbc)
+  - [JDBC Intro Teil 1](#jdbc-intro-teil-1)
+    - [Entwicklungsumgebung einrichten](#entwicklungsumgebung-einrichten)
+    - [Datenbankverbindung herstellen](#datenbankverbindung-herstellen)
+    - [Daten abfragen](#daten-abfragen)
+    - [Daten hinzufügen](#daten-hinzufügen)
+    - [Daten ändern](#daten-ändern)
+    - [Daten löschen](#daten-löschen)
+    - [Daten abfragen 2](#daten-abfragen-2)
+  - [JDBC Intro Teil 2](#jdbc-intro-teil-2)
+  - [JDBC UND DAO – STUDENTEN](#jdbc-und-dao--studenten)
+    - [DAO](#dao)
+    - [Projektsetup](#projektsetup)
+    - [DB Verbindung Singleton](#db-verbindung-singleton)
+    - [UI](#ui)
+    - [Domänenklassen](#domänenklassen)
+    - [DAO Interfaces](#dao-interfaces)
+    - [GetAll](#getall)
+    - [getById](#getbyid)
+    - [Insert](#insert)
+    - [Update](#update)
+
 
 # Datenpersistenz (JDBC)
 
@@ -546,8 +569,188 @@ Durch das Suchen mit einer ID wird eine Course im Detail angezeigt.
     }
 ```
 
+### Insert
+In diesem Abschnitt wird ein Course hinzugefügt. 
+```java
+/**
+     * UI Methode die den User durch das Hinzufügen führt
+     */
+    private void addCourse() {
+        //Temporäre Datenfelder
+        String name, description;
+        int hours;
+        Date dateFrom, dateTo;
+        CourseType courseType;
+        try {
+            //Kursdaten eingeben und validieren
+            System.out.println("Bitte alle Kursdaten angeben: ");
+            System.out.println("Name: ");
+            name = scan.nextLine();
+            if (name.equals("")) throw new IllegalArgumentException("Eingabe darf nicht leer sein!");
+            System.out.println("Beschreibung: ");
+            description = scan.nextLine();
+            if (description.equals("")) throw new IllegalArgumentException("Eingabe darf nicht leer sein!");
+            System.out.println("Stundenanzahl: ");
+            hours = Integer.parseInt(scan.nextLine());
+            System.out.println("Startdatum (YYYY-MM-DD): ");
+            dateFrom = Date.valueOf(scan.nextLine());
+            System.out.println("Startdatum (YYYY-MM-DD): ");
+            dateTo = Date.valueOf(scan.nextLine());
+            System.out.println("Kurstyp: (ZA/BD/FF/OE): ");
+            courseType = CourseType.valueOf(scan.nextLine());
+            //Verwendet die insert Methode des repos, um einen Kurs zu erstellen.
+            Optional<Course> optionalCourse = repo.insert(
+                    new Course(name, description, hours, dateFrom, dateTo, courseType)
+            );
+            if (optionalCourse.isPresent()) {
+                System.out.println("Kurs angelegt: " + optionalCourse.get());
+            } else {
+                System.out.println("Kurs konnte nicht angelegt werden.");
+            }
+        } catch (IllegalArgumentException illegalArgumentException) {
+            System.out.println("Eingabefehler: " + illegalArgumentException.getMessage());
+        } catch (InvalidValueException invalidValueException) {
+            System.out.println("Kursdaten nicht korrekt angegeben: " + invalidValueException.getMessage());
+        } catch (DatabaseException databaseException) {
+            System.out.println("Datenbankfehler beim Einfügen: " + databaseException.getMessage());
+        } catch (Exception exception) {
+            System.out.println("unbekannter Fehler: " + exception.getMessage());
+        }
+    }
+    /**
+     * Fügt einen Course zur Datenbank hinzu.
+     * @param entity das Course Objekt das hinzugefügt werden soll
+     * @return ein Optional vom Typ Course.
+     */
+    @Override
+    public Optional<Course> insert(Course entity) {
+        Assert.notNull(entity);
+        try {
+            //Objektrelationales Mapping
+            String sql = "INSERT INTO `courses` (`name`, `description`, `hours`, `begindate`, `enddate`, `coursetype`) VALUES (?,?,?,?,?,?)";
+            PreparedStatement preparedStatement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, entity.getName());
+            preparedStatement.setString(2, entity.getDescription());
+            preparedStatement.setInt(3, entity.getHours());
+            preparedStatement.setDate(4, entity.getBeginDate());
+            preparedStatement.setDate(5, entity.getEndDate());
+            preparedStatement.setString(6, entity.getCourseType().toString());
+            int affectedRows = preparedStatement.executeUpdate();
+            //Prüfen, ob das Einfügen funktioniert hat.
+            if (affectedRows == 0) {
+                return Optional.empty();
+            }
+            //Die neu erstellte ID lassen wir uns zurückgeben.
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                //Für die Rückgabe verwenden wird die zuvor erstellte Funktion getById
+                return this.getById(generatedKeys.getLong(1));
+            } else {
+                return Optional.empty();
+            }
+        } catch (SQLException sqlException) {
+            throw new DatabaseException(sqlException.getMessage());
+        }
+    }
+```
 
+### Update
 
+Die CRUD Methode updated einen Course in der Datenbank. 
+```java  
+     /**
+     * Aktualisiert einen Course in der Datenbank.
+     * @param entity Course der veränder werden soll
+     * @return Optional von Type Course
+     */
+    @Override
+    public Optional<Course> update(Course entity) {
+
+        Assert.notNull(entity);
+
+        String sql = "UPDATE `courses` SET `name` = ?, `description` = ?, `hours` = ?, `begindate` = ?, `enddate` = ?, `coursetype` = ? WHERE `courses`.`id` = ?";
+        //Prüfen, ob der mitgegebene Course in der Datenbank existiert.
+        if (countCoursesInDbWithId(entity.getId()) == 0) {
+            return Optional.empty();
+        } else {
+            try {
+                PreparedStatement preparedStatement = con.prepareStatement(sql);
+                preparedStatement.setString(1, entity.getName());
+                preparedStatement.setString(2, entity.getDescription());
+                preparedStatement.setInt(3, entity.getHours());
+                preparedStatement.setDate(4, entity.getBeginDate());
+                preparedStatement.setDate(5, entity.getEndDate());
+                preparedStatement.setString(6, entity.getCourseType().toString());
+                preparedStatement.setLong(7, entity.getId());
+
+                int affectedRows = preparedStatement.executeUpdate();
+                if (affectedRows == 0) {
+                    return Optional.empty();
+                } else {
+                    return this.getById(entity.getId());
+                }
+            } catch (SQLException sqlException) {
+                throw new DatabaseException(sqlException.getMessage());
+            }
+        }
+    }
+```
+CLI implementierte Funktion:
+```java
+/**
+     * Der Benutzer wird gefragt, welchen Kurs er updaten will.
+     * Nach einer Prüfung, ob der Kurs vorhanden ist, können die Daten eingegeben werden.
+     */
+    private void updateCourseDetails() {
+        System.out.println("Für welche Course ID möchten Sie die CourseDetails ändern?");
+        Long courseID = Long.parseLong(scan.nextLine());
+        try {
+            Optional<Course> courseOptional = repo.getById(courseID);
+            if(courseOptional.isEmpty()){
+                System.out.println("Kurs mit der ID nicht vorhanden!");
+            }else{
+                Course course = courseOptional.get();
+                System.out.println("Änderungen für folgenden Kurs: ");
+                System.out.println(course);
+                String name, description, hours, dateFrom, dateTo, courseType;
+                System.out.println("Bitte neue Kursdaten angeben (Enter, falls keine Änderung gewünscht ist):");
+                System.out.println("Name: ");
+                name = scan.nextLine();
+                System.out.println("Beschreibung: ");
+                description = scan.nextLine();
+                System.out.println("Hours: ");
+                hours = scan.nextLine();
+                System.out.println("Startdatum (YYYY-MM-DD): ");
+                dateFrom = scan.nextLine();
+                System.out.println("Endatum (YYYY-MM-DD): ");
+                dateTo = scan.nextLine();
+                System.out.println("Kurstyp (ZA/BF/FF/OE): ");
+                courseType = scan.nextLine();
+
+                Optional<Course> optionalCourseUpdated = repo.update(
+                        new Course(
+                                course.getId(),
+                                //Kurzschreibweise eines ifelse
+                                name.equals("") ? course.getName() : name,
+                                description.equals("") ? course.getDescription():description,
+                                hours.equals("") ? course.getHours(): Integer.parseInt(hours),
+                                dateFrom.equals("") ? course.getBeginDate(): Date.valueOf(dateFrom),
+                                dateTo.equals("") ? course.getEndDate(): Date.valueOf(dateTo),
+                                courseType.equals("") ? course.getCourseType() : CourseType.valueOf(courseType)
+                        )
+                );
+                //Funktionale Funktion eines Optionals
+                optionalCourseUpdated.ifPresentOrElse(
+                        (c)-> System.out.println("kurs aktualisiert: " + c),
+                        ()-> System.out.println("Kurs konnte nicht aktualisiert werden!")
+                );
+            }
+
+        }catch (Exception exception){
+            System.out.println("Unbekannter Fehler bei Kursupdate: " + exception.getMessage());
+        }
+    }
+```
 
 
 
