@@ -907,8 +907,13 @@ Es werden die laufenden Kurse gesucht und auf der CLI ausgegeben.
 Gib einen textuellen Vorschlag hab, wie man die bisher programmierte Applikation für die Buchung von Kursen durch Studenten erweitern könnte. 
 
 Zuerst sollten zwei neue Tabellen in der Datenbank erstellt werden.
-Tabelle Studenten: In dieser Tabelle werden die Studenten gespeichert.
-Tabelle Buchungen: Dies ist die Auflösungstabelle, da Studenten und Courses eine m:n Beziehung haben. Sie beinhaltet die Primärschlüssel der beiden Tabellen als Fremdschlüssel.
+- Tabelle Studenten: In dieser Tabelle werden die Studenten gespeichert.
+- Tabelle Buchungen: Dies ist die Auflösungstabelle, da Studenten und Courses eine m:n Beziehung haben. Sie beinhaltet die Primärschlüssel der beiden Tabellen als Fremdschlüssel.
+- 
+**Tabelle Student** 
+![](img/Tabelle_Student.png)
+**Tabelle Buchungen**
+![](img/Tabelle_Buchungen.png)
 
 Zu den Domänenklassen wurden zwei weitere hinzukommen. Einmal die Klasse für die Buchungen und die Klasse für die Studenten. Beide Klassen erben von der abstrakten Klasse BaseEntity.
 
@@ -922,6 +927,9 @@ Weiters werden konkrete Klassen die von diesen Interfaces erben erstellt. In die
 Die CLI muss so angepasst werden, dass MyStudentRepository und MyBuchungRepository als Datenfelder deklariert werden und im Konstruktor instanziiert werden. 
 
 Um z.B. eine Buchung zu erstellen benötigt man einen Kurs, einen Studenten und Daten für die restlichen Datenfelder wie z.B. bestätigt. Dabei muss überprüft werden ob der Student oder der Kurs vorhanden sind, bevor man eine Buchung hinzufügt.
+
+**Diagramm von DAO**
+![](img/cli_buchungen.png)
 
 
 
