@@ -10,6 +10,7 @@ Manuel Foidl
 - [Inhaltsverzeichnis](#inhaltsverzeichnis)
 - [Spring Boot](#spring-boot)
   - [SpassMitSpringBoot Intro](#spassmitspringboot-intro)
+  - [SpassMitSpringBoot Domain und Repo](#spassmitspringboot-domain-und-repo)
 
 # Spring Boot
 
@@ -39,6 +40,67 @@ spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
 ```
+## SpassMitSpringBoot Domain und Repo
+
+In diesem Abschnitt wird eine Domänen Klasse erstellt und ein Repository für Student.
+Spring Boot und die Dependencies arbeiten vorwiegend mit Annotationen.
+
+Klasse Student:
+```java
+@Entity //Gibt an, dass es sich um eine Entität handelt.
+@AllArgsConstructor //Konstruktor mit allen Datenfelder
+@NoArgsConstructor //Konstruktor mit keine Datenfelder
+@Getter
+@Setter
+public class Student {
+
+    @Id //Gibt an, dass dieses Datenfeld der Primärschlüssel ist
+    @GeneratedValue(strategy= GenerationType.SEQUENCE) //Es wird angewiesen, dass es sich um Autoinkrement
+    private Long id;
+    @Size(min=2) //Automatische Validierung
+    private String name;
+    @Size(min=4, max=6) //Automatische Validierung
+    private String plz;
+
+    //Konstruktor ohne ID für INSERT
+    public Student(String name, String plz){
+        this.name = name;
+        this.plz = plz;
+    }
+}
+```
+Interface StudentJPARepo:
+```java
+/**
+ * Das Interface erbt von JpaRepository, dass als Baserepository fungiert.
+ * Es bietet auch ein Repo, dass einige Funktion implementiert hat z.B. SimpleJPARepository
+ */
+@Repository 
+public interface StudentJPARepo extends JpaRepository<Student, Long> {
+    List<Student> findAllByPlz(String plz);
+}
+```
+StudentenverwaltungApplication:
+```java
+@SpringBootApplication
+public class StudentenverwaltungApplication implements ApplicationRunner { //Durch die Implementierung von ApplicationRunner kann in der Funktion run z.B. Dummy Daten erstellt werden.
+	//Durch Autowired wird automatisch eine Rep von Typ StudentJPARepo verwendet.
+	//Bei uns SimpleJPARepository
+	@Autowired
+	StudentJPARepo studentJPARepo;
+	public static void main(String[] args) {
+		SpringApplication.run(StudentenverwaltungApplication.class, args);
+	}
+	@Override
+	public void run(ApplicationArguments args) throws Exception {
+		//Erstellen von Dummy Daten
+		this.studentJPARepo.save(new Student("Manuel Foidl" , "6370"));
+		this.studentJPARepo.save(new Student("Max Muster" , "3322"));
+		this.studentJPARepo.save(new Student("Maxine Musterfrau" , "7070"));
+	}
+}
+```
+
 
 
 
