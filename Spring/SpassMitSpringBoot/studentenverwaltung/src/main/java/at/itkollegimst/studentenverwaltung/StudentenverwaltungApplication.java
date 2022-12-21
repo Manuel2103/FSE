@@ -1,14 +1,12 @@
 package at.itkollegimst.studentenverwaltung;
 
-import at.itkollegimst.studentenverwaltung.Repositories.StudentJPARepo;
+import at.itkollegimst.studentenverwaltung.repositories.StudentJPARepo;
 import at.itkollegimst.studentenverwaltung.domain.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.sql.SQLOutput;
 
 @SpringBootApplication
 public class StudentenverwaltungApplication implements ApplicationRunner { //Durch die Implementierung von ApplicationRunner kann in der Funktion run z.B. Dummy Daten erstellt werden.

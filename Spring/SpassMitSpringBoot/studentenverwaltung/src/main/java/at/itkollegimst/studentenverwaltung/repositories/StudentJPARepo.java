@@ -1,4 +1,4 @@
-package at.itkollegimst.studentenverwaltung.Repositories;
+package at.itkollegimst.studentenverwaltung.repositories;
 
 import at.itkollegimst.studentenverwaltung.domain.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
