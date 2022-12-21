@@ -7,7 +7,6 @@ import dataaccess.MyStudentRepository;
 import domain.*;
 
 import java.sql.Date;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -16,7 +15,6 @@ public class Cli {
     private Scanner scan;
     private MyCourseRepository courseRepo;
     private MyStudentRepository studentRepo;
-
     private MyBuchungRepository buchungRepo;
 
     public Cli(MyCourseRepository repo, MyStudentRepository studentRepo, MyBuchungRepository buchungRepo) {

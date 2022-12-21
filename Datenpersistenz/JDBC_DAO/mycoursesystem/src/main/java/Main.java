@@ -1,10 +1,8 @@
 import dataaccess.MySqlBuchungRepository;
 import dataaccess.MySqlCourseRepository;
 import dataaccess.MySqlStudentRepository;
-import dataaccess.MysqlDatabaseConnection;
 import ui.Cli;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 public class Main {

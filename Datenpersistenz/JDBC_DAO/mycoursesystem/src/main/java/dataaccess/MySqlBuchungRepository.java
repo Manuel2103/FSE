@@ -30,6 +30,10 @@ public class MySqlBuchungRepository implements MyBuchungRepository{
         return Optional.empty();
     }
 
+    /**
+     * Gibt alle Buchungen zurück
+     * @return Liste von Buchungen
+     */
     @Override
     public List<Buchung> getAll() {
         ArrayList<Buchung> buchungsListe = new ArrayList<>();

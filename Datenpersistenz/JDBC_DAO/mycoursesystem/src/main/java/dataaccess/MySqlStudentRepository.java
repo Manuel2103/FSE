@@ -21,6 +21,11 @@ public class MySqlStudentRepository implements MyStudentRepository {
         return Optional.empty();
     }
 
+    /**
+     * Gibt den Studenten zurück, der die mitgegebene ID besitzt
+     * @param id Mitgegebene id des Studenten
+     * @return Optional eines Studenten
+     */
     @Override
     public Optional<Student> getById(Long id) {
 
@@ -42,6 +47,10 @@ public class MySqlStudentRepository implements MyStudentRepository {
         }
     }
 
+    /**
+     * Gibt alle Studenten zurück
+     * @return Gibt eine Liste von Studenten zurück
+     */
     @Override
     public List<Student> getAll() {
 
