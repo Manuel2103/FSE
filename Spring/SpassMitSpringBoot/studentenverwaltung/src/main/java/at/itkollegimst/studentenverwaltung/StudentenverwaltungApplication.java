@@ -1,5 +1,6 @@
 package at.itkollegimst.studentenverwaltung;
 
+import at.itkollegimst.studentenverwaltung.repositories.DbZugriffStudenten;
 import at.itkollegimst.studentenverwaltung.repositories.StudentJPARepo;
 import at.itkollegimst.studentenverwaltung.domain.Student;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ public class StudentenverwaltungApplication implements ApplicationRunner { //Dur
 	//Durch Autowired wird automatisch eine Rep von Typ StudentJPARepo verwendet.
 	//Bei uns SimpleJPARepository
 	@Autowired
-	StudentJPARepo studentJPARepo;
+	DbZugriffStudenten dbZugriffStudenten;
 	public static void main(String[] args) {
 
 		SpringApplication.run(StudentenverwaltungApplication.class, args);
@@ -22,8 +23,8 @@ public class StudentenverwaltungApplication implements ApplicationRunner { //Dur
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		//Erstellen von Dummy Daten
-		this.studentJPARepo.save(new Student("Manuel Foidl" , "6370"));
-		this.studentJPARepo.save(new Student("Max Muster" , "3322"));
-		this.studentJPARepo.save(new Student("Maxine Musterfrau" , "7070"));
+		this.dbZugriffStudenten.studentSpeichern(new Student("Manuel Foidl" , "6370"));
+		this.dbZugriffStudenten.studentSpeichern(new Student("Max Muster" , "3322"));
+		this.dbZugriffStudenten.studentSpeichern(new Student("Maxine Musterfrau" , "7070"));
 	}
 }
