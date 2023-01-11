@@ -2,8 +2,13 @@ package at.itkollegimst.studentenverwaltung.controller;
 
 import at.itkollegimst.studentenverwaltung.domain.Student;
 import at.itkollegimst.studentenverwaltung.exceptions.StudentNichtGefunden;
+import at.itkollegimst.studentenverwaltung.exceptions.StudentValidierungFehlgeschlagen;
 import at.itkollegimst.studentenverwaltung.services.StudentenService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +29,18 @@ public class StudentRestController {
         return ResponseEntity.ok(this.studentenService.alleStudenten());
     }
     @PostMapping
-    public ResponseEntity<Student> studentEinfuegen(@RequestBody Student student){ //@RequestBody erstellt von dem mitgegebenen Daten von POST ein Student Objekt.
+    public ResponseEntity<Student> studentEinfuegen(@Valid @RequestBody Student student, BindingResult bindingResult) throws StudentValidierungFehlgeschlagen { //@RequestBody erstellt von dem mitgegebenen Daten von POST ein Student Objekt.
+
+        String errors="";
+        if(bindingResult.hasErrors()){
+            for(ObjectError error : bindingResult.getAllErrors()){
+                errors+="\nValidierungsfehler für Objekt" + error.getObjectName() +
+                        " im Feld " + ((FieldError)error).getField() + " mit folgendem Problem" +
+                        error.getDefaultMessage();
+            }
+            throw new StudentValidierungFehlgeschlagen(errors);
+        }
+
         return ResponseEntity.ok(this.studentenService.studentEinfuegen(student));
 
     }

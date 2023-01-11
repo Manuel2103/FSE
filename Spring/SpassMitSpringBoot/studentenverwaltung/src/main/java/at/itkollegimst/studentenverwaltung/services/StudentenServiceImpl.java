@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+@Service //@Service verweist darauf das StudentenServiceImpl eine Componente ist und bei @Autowiring in Frage kommt.
 public class StudentenServiceImpl implements StudentenService{
 
     //Technologieneutraler Zugriff auf die Studenten durch Dependency Injection

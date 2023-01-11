@@ -12,6 +12,8 @@ Manuel Foidl
   - [SpassMitSpringBoot Intro](#spassmitspringboot-intro)
   - [SpassMitSpringBoot Domain und Repo](#spassmitspringboot-domain-und-repo)
   - [SpassMitSpringBoot Datenlayer](#spassmitspringboot-datenlayer)
+  - [SpassMitSpringBoot ServiceLayer](#spassmitspringboot-servicelayer)
+  - [SpassMitSpringBoot ControllerLayer](#spassmitspringboot-controllerlayer)
 
 # Spring Boot
 
@@ -157,6 +159,95 @@ public class DbZugriffStudentenJPA implements DbZugriffStudenten{
     }
 }
 ```
+## SpassMitSpringBoot ServiceLayer
+
+Der ServiceLayer bietet den verschiedenen Layer außerhalb eine Möglichkeit mit den anderen Layern zu kommunizieren. 
+Zum Beispiel Controller mit dem Repo. 
+
+Dazu wird ein Interface erstellt, dass verschiedene verschiedene Funktionen deklariert.
+
+Darauf folgt eine Klasse, die diese Funktionen implementiert. Diese Klasse besitzt ein Datenfeld von DbZugriffStudenten, um dort auf die Funktionen zuzugreifen. Durch Dependency Injection ist aber nicht bekannt welche Technologie dahinter steckt, da nur das Interface als Deklaration verwendet wird.
+
+Klasse StudentenServiceImpl: 
+```java
+@Service //@Service verweist darauf das StudentenServiceImpl eine Componente ist und bei @Autowiring in Frage kommt.
+public class StudentenServiceImpl implements StudentenService{
+    //Technologieneutraler Zugriff auf die Studenten durch Dependency Injection
+    private DbZugriffStudenten dbZugriffStudenten;
+
+    public StudentenServiceImpl(DbZugriffStudenten dbZugriffStudenten) {
+        this.dbZugriffStudenten = dbZugriffStudenten;
+    }
+    //Die folgenden Methoden werden mithilfe der bereits vorhandenen Methoden in DbZugriffStudentenJPA implementiert.
+    @Override
+    public List<Student> alleStudenten() {
+        return this.dbZugriffStudenten.alleStudenten();
+    }
+    @Override
+    public Student studentEinfuegen(Student student) {
+        return this.dbZugriffStudenten.studentSpeichern(student);
+    }
+    @Override
+    public Student studentMitId(Long id) throws StudentNichtGefunden {
+        return this.dbZugriffStudenten.studentMitId(id);
+    }
+    @Override
+    public List<Student> alleStudentenMitPlz(String plz) {
+        return this.dbZugriffStudenten.alleStudentenAusDemOrt(plz);
+    }
+    @Override
+    public void studentLoeschenMitId(Long id) {
+        this.dbZugriffStudenten.studentLoeschenMitId(id);
+    }
+}
+```
+
+## SpassMitSpringBoot ControllerLayer
+
+Der ControllerLayer stellt eine REST-API zur Verfügung, die verschiedene Funktion erfüllt. 
+
+Klasse StudentRestController:
+```java
+//RestController ermöglicht es eine Rest-API zu realisieren.
+@RestController //RestController ermöglicht es eine Rest-API zu realisieren.
+@RequestMapping("api/v1/studenten") //Pfad von API
+public class StudentRestController {
+    //ServiceLayer Zugriff
+    private StudentenService studentenService;
+
+    public StudentRestController(StudentenService studentenService) {
+        this.studentenService = studentenService;
+    }
+    @GetMapping
+    public ResponseEntity<List<Student>> giballeStudenten(){
+        //ResponseEntity erstellt aus den Studentobjekten JSON
+        return ResponseEntity.ok(this.studentenService.alleStudenten());
+    }
+    @PostMapping
+    public ResponseEntity<Student> studentEinfuegen(@RequestBody Student student){ //@RequestBody erstellt von dem mitgegebenen Daten von POST ein Student Objekt.
+        return ResponseEntity.ok(this.studentenService.studentEinfuegen(student));
+
+    }
+    @DeleteMapping("/{id}")
+    public String studentLoeschen(@PathVariable Long id)//PathVariable dient dazu die mitgegebenen Werte zu verwenden
+    {
+        this.studentenService.studentLoeschenMitId(id);
+        return "Student gelöscht";
+    }
+    @GetMapping("/mitplz/{plz}")
+    public ResponseEntity<List<Student>> alleStudentenMitPlz(@PathVariable String plz){
+        return ResponseEntity.ok(this.studentenService.alleStudentenMitPlz(plz));
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Student> studentMitId(@PathVariable Long id) throws StudentNichtGefunden {
+        return ResponseEntity.ok(this.studentenService.studentMitId(id));
+
+    }
+}
+```
+
+
+
 
 
 
