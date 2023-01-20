@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html
         xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:th="http://www.tyhmeleaf.org" xmlns:student="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.tyhmeleaf.org"
         lang="de">
 
 <head>
@@ -33,7 +33,10 @@
         <td th:text="${student.id}"></td>
         <td th:text="${student.name}"></td>
         <td th:text="${student.plz}"></td>
-        <td>Offen</td>
+        <td>
+            <a th:href="@{/web/v1/studenten/update/{id}(id=${student.id})}" class="btn btn-info" role="button">bearbeiten </a>
+            <a th:href="@{/web/v1/studenten/delete/{id}(id=${student.id})}" class="btn btn-warning" role="button">löschen </a>
+        </td>
     </tr>
     </tbody>
 </table>
