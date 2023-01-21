@@ -17,6 +17,7 @@ import javax.validation.Valid;
 @RequestMapping("/web/v1/studenten")
 public class StudentThymeleafController {
 
+    //Verwendet den StudentenService, um dessen Funktioen zu verwenden.
     private StudentenService studentService;
 
     public StudentThymeleafController(StudentenService studentService) {

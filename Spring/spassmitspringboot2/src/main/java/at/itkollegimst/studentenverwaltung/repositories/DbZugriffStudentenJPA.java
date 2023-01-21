@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Component //Gibt an, dass diese Klasse als Komponente verwendet werden kann. Wenn dies nicht vorhanden wäre, kann diese Klasse nicht bei Autowired verwendet werden
 public class DbZugriffStudentenJPA implements DbZugriffStudenten {
 
     private StudentJPARepo studentJPARepo;

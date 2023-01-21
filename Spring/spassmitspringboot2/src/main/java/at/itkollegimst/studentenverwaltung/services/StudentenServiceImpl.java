@@ -7,11 +7,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+
+@Service //Gibt an, dass diese Klasse ein Service bietet.
 public class StudentenServiceImpl implements StudentenService {
 
+    //DbZugriffStudenten wird Autowired 
     private DbZugriffStudenten dbZugriffStudenten;
 
+    //Autowired wird durch den Konstruktor impliziert
     public StudentenServiceImpl(DbZugriffStudenten dbZugriffStudenten) {
         this.dbZugriffStudenten = dbZugriffStudenten;
     }

@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/v1/studenten")
-@CrossOrigin(origins = "http://127.0.0.1:5500")
+/**
+ * Rest API für Studenten
+ */
+@RestController //Gibt an, dass es sich um eine Rest API handelt
+@RequestMapping("/api/v1/studenten") //Gibt die URL wie diese API aufgerufen werden kann
+@CrossOrigin(origins = "http://127.0.0.1:5500") //Gibt die API auch für andere Ports(Server) frei
 public class StudentRestController {
 
     private StudentenService studentenService;
@@ -26,14 +29,12 @@ public class StudentRestController {
     }
 
     @GetMapping
-    //CURL-Call zum Testen: curl -H "Accept: application/json" localhost:8080/api/v1/studenten
-    public ResponseEntity<List<Student>> gibAlleStudenten() {
+      public ResponseEntity<List<Student>> gibAlleStudenten() {
         return ResponseEntity.ok(this.studentenService.alleStudenten());
     }
 
     @PostMapping
-    //CURL-Call zum Testen: curl -X POST -H "Accept: application/json" -H "Content-Type: application/json" -d '{"name":"Günter Hasi 2","plz":"3322"}' http://localhost:8080/api/v1/studenten
-    public ResponseEntity<Student> studentEinfuegen(@Valid @RequestBody Student student, BindingResult bindingResult) throws StudentValidierungFehlgeschlagen {
+     public ResponseEntity<Student> studentEinfuegen(@Valid @RequestBody Student student, BindingResult bindingResult) throws StudentValidierungFehlgeschlagen {
         //    String errors = "";
         FormValidierungExceptionDTO formValidationErrors = new FormValidierungExceptionDTO("9000");
 
@@ -49,8 +50,7 @@ public class StudentRestController {
     }
 
     @PutMapping
-    //CURL-Call zum Testen: curl -X PUT -H "Accept: application/json" -H "Content-Type: application/json" -d '{"name":"Günter Hasi","plz":"3322"}' http://localhost:8080/api/v1/studenten
-    public ResponseEntity<Student> studentUpdaten(@Valid @RequestBody Student student, BindingResult bindingResult) throws StudentValidierungFehlgeschlagen, StudentNichtGefunden {
+   public ResponseEntity<Student> studentUpdaten(@Valid @RequestBody Student student, BindingResult bindingResult) throws StudentValidierungFehlgeschlagen, StudentNichtGefunden {
         //    String errors = "";
         FormValidierungExceptionDTO formValidationErrors = new FormValidierungExceptionDTO("9000");
 

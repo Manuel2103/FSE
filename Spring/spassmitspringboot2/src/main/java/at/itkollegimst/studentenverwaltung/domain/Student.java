@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
 public class Student {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE) //Autoinkrement
     private Long id;
 
     @Size(min = 2, max = 255, message = "Der Studentenname '${validatedValue}' ist ungültig. Studentennamen müssen zwischen {min} und {max} Zeichen lang sein.")

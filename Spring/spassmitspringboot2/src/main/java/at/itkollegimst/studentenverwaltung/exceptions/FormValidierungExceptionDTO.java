@@ -8,7 +8,6 @@ import java.util.HashMap;
 @Getter
 @Setter
 public class FormValidierungExceptionDTO {
-
     String code;
     private HashMap<String,String> formValidationErrors;
 

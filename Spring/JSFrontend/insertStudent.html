@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student:in hinzufügen</title>
+    <script src="jquery-3.6.3.min.js"></script>
+    <link rel="stylesheet" href="bootstrap.min.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <h1>Student:in hinzufügen</h1>
+        <hr class="border-2 border-top border-info">
+        <a href="allstudents.html" class="btn btn-info" role="button">Student:innenliste</a>
+        <hr class="border-2 border-top border-info">
+
+        <form>
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name">
+                <div class="form-text" id="nameError"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="plz" class="form-label">PLZ</label>
+                <input type="text" class="form-control" id="plz" name="plz">
+                <div class="form-text" id="plzError"></div>
+            </div>
+        </form>
+        <button class="btn btn-warning" onclick="sendData()">hinzufügen</button>
+    </div>
+</body>
+<script>
+    //Funktion zum einfügen von Studenten
+    async function sendData(){
+        //Daten aus dem Formular auslesen
+        const name = $('input[name=name]').val()
+        const plz = $('input[name=plz]').val()
+
+        try {
+            //POST Call auf die API
+            const response = await fetch('http://localhost:8080/api/v1/studenten',
+                {
+                    method: 'POST',
+                    cache: 'no-cache',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({"name": name, "plz":plz}) 
+                })
+                const data = await response.json()
+                //Zwei Felder für Fehlermeldungen freihalten
+                $('#nameError').html('')
+                $('#plzError').html('')
+                //Prüfen, ob Fehler entstanden sind
+                if(data.code && data.code == 9000 && data.formValidationErrors){
+                    if(data.formValidationErrors.name){
+                        //Felder im Falle befüllen
+                        $('#nameError').html(data.formValidationErrors.name)
+                    }
+                    if(data.formValidationErrors.plz){
+                        $('#plzError').html(data.formValidationErrors.plz)
+                    }
+                }else{
+                    $('#name').val('')
+                    $('#plz').val('')
+                    alert("Student eingefügt")
+                }
+   
+        } catch (exception) { //siehe fetch()-API Dokumentation
+            alert("Student konnte nicht eingefügt werden")
+        }
+    }
+</script>
+</html>
