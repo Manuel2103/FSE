@@ -10,6 +10,7 @@ Manuel Foidl
 - [Inhaltsverzeichnis](#inhaltsverzeichnis)
 - [Datenpersistenz (JDBC)](#datenpersistenz-jdbc)
 - [Spring Boot](#spring-boot)
+- [Objektorientierte Analyse](#objektorientierte-analyse)
 
 
 # Datenpersistenz (JDBC)
@@ -17,4 +18,7 @@ Manuel Foidl
 
 # Spring Boot
 [Dokumentation Spring Boot](/Spring/README.md)
+
+# Objektorientierte Analyse
+[Dokumentation OOA](/OO%20Analyse/README.md)
 

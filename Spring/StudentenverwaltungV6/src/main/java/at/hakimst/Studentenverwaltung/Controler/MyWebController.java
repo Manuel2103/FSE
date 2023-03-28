@@ -31,6 +31,7 @@ public class MyWebController {
         return new ModelAndView("allstudents", "studenten", alleStudis);
     }
 
+
     @GetMapping("/web/insertstudentform")
     public ModelAndView insertstudentform() {
         return new ModelAndView("insertstudentform", "mystudent", new Student());

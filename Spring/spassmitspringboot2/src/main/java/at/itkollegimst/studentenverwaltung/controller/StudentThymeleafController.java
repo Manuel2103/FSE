@@ -61,7 +61,7 @@ public class StudentThymeleafController {
     }
 
     @PostMapping("/update")
-    public String stuentUpdaten(@Valid Student student, BindingResult bindingResult){
+    public String studentUpdaten(@Valid Student student, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             return "studentenupdaten";
         }else{

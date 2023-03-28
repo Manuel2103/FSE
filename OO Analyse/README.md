@@ -5,7 +5,46 @@ Dokumentation und Mitschrift des Themas OOA.
 Manuel Foidl
 
 # Inhaltsverzeichnis
-
+- [FSE](#fse)
+- [Inhaltsverzeichnis](#inhaltsverzeichnis)
+- [OBJEKTORIENTIERTE ANALYSE](#objektorientierte-analyse)
+  - [Ziele](#ziele)
+  - [Requirements-Engineering](#requirements-engineering)
+  - [Strukturelle Modellierung](#strukturelle-modellierung)
+    - [Objektdiagramm](#objektdiagramm)
+  - [Dynamische Modellierung](#dynamische-modellierung)
+    - [Flussdiagramm](#flussdiagramm)
+- [ANFORDERUNGSANALYSE MIT ANWENDUNGSFÄLLEN](#anforderungsanalyse-mit-anwendungsfällen)
+  - [Grundlagen](#grundlagen)
+  - [Vorgehensweisen](#vorgehensweisen)
+  - [Werkzeuge](#werkzeuge)
+  - [Dokumentation](#dokumentation)
+- [ANFORDERUNGSANALYSE MIT USER STORIES UND EPICS](#anforderungsanalyse-mit-user-stories-und-epics)
+  - [Grundlagen](#grundlagen-1)
+  - [Vorgehensweisen](#vorgehensweisen-1)
+  - [Werkzeuge](#werkzeuge-1)
+  - [Dokumentation](#dokumentation-1)
+- [WICHTIGE UML-DIAGRAMMARTEN](#wichtige-uml-diagrammarten)
+  - [Klassendiagramm](#klassendiagramm)
+  - [Sequenzdiagramm](#sequenzdiagramm)
+  - [Zustandsdiagramm](#zustandsdiagramm)
+- [TEXTUELLES DIAGRAMM-DESIGN-TOOL](#textuelles-diagramm-design-tool)
+- [USE-CASE-DIAGRAMM 1](#use-case-diagramm-1)
+- [USE-CASE-DIAGRAMM 2](#use-case-diagramm-2)
+- [USE-CASE-DIAGRAMM 3](#use-case-diagramm-3)
+- [USE-CASE-DIAGRAMM 4](#use-case-diagramm-4)
+- [USE-CASE-DETAILBESCHREIBUNGEN](#use-case-detailbeschreibungen)
+- [KLASSENDIAGRAMME 1](#klassendiagramme-1)
+- [KLASSENDIAGRAMME 2](#klassendiagramme-2)
+- [KLASSENDIAGRAMME 3](#klassendiagramme-3)
+- [KLASSENDIAGRAMME 4](#klassendiagramme-4)
+- [SEQUENZDIAGRAMM 1](#sequenzdiagramm-1)
+- [SEQUENZDIAGRAMM 2](#sequenzdiagramm-2)
+- [AKTIVITÄTSDIAGRAMM 1](#aktivitätsdiagramm-1)
+- [AKTIVITÄTSDIAGRAMM 2](#aktivitätsdiagramm-2)
+- [ZUSTANDSDIAGRAMM 1](#zustandsdiagramm-1)
+- [ZUSTANDSDIAGRAMM 2](#zustandsdiagramm-2)
+- [C4-DIAGRAMM](#c4-diagramm)
 
 
 # OBJEKTORIENTIERTE ANALYSE
@@ -257,4 +296,63 @@ classDiagram
         -double lohn
     }
 ```
+
+# KLASSENDIAGRAMME 3
+Sie haben den Auftrag, eine Online-Videothek zu realisieren. Sie haben dazu folgende Angaben erhalten:
+-	Die Videothek unterstützt das Ausleihen von Filmen für registrierte Kunden. Dazu müssen
+-	Kunden sich zunächst mit ihrer Kundennummer und ihrem Passwort anmelden.
+-	Kunden werden zusammen mit ihrem Guthaben verwaltet.
+-	Filme besitzen einen individuellen Namen und Preis.
+-	Ein Film wird über einen Streaming-Server bereitgestellt. Der Server kann hierzu einen kundenspezifischen Link generieren.
+
+//TODO
+
+
+# KLASSENDIAGRAMME 4
+Interpretieren Sie schriftlich das folgende Klassendiagramm:
+![](img/Klassendiagramm4.png)
+Das Spielobjekt ist eine abstrakte Klasse die von der Klasse Raumschiff und einer weiteren abstrakten Klasse Laserschuss extended. Laserschuss vererbt an die Klassen LaserschussGross und LaserschussKlein. Raumschiff verwendet n Laserschüsse und besitzt 0 bis 10 Schussvorrichtungen. Die Schussvorrichtung ist eine abstrakte Klasse an Vorrichtung Gross und VorrichtungKlein vererbt.
+
+# SEQUENZDIAGRAMM 1
+Interpretieren Sie schriftlich das folgende Sequenzdiagramm:
+![](img/Sequenzdiagramm1.png)
+
+# SEQUENZDIAGRAMM 2
+Modellieren Sie für die Online-Videothek (siehe Aufgabe 3) die Film Ausleihen Funktion. Erstellen Sie dazu ein Sequenzdiagramm für folgenden Ablauf der Ausleihe:
+-	Die Videothek berechnet zuerst, ob das Guthaben des Kunden reicht um den Film zu bezahlen.
+-	Reicht das Guthaben nicht aus, wird stattdessen eine Aufforderung zum Ausfüllen des Guthabens
+angezeigt.
+-	Falls das aktuelle Guthaben des Mitglieds ausreicht, veranlasst die Videothek einen Streaming-
+Server einen Link für den Film zu generieren.
+-	Die Videothek zeigt dem Benutzer den Link an, unter dem der Film zugreifbar ist.
+Gehen Sie davon aus, dass sich das Mitglied bereits auf der Seite des gewünschten Films beendet.
+
+# AKTIVITÄTSDIAGRAMM 1
+Interpretieren Sie schriftlich das folgende Aktivitätsdiagramm:
+
+![](img/Aktivit%C3%A4tsdiagramm1.png)
+
+# AKTIVITÄTSDIAGRAMM 2
+Modellieren Sie schriftlich den folgenden Sachverhalt als Aktivitätsdiagramm: 
+
+Ein Fluggast ist am Flughafen angekommen. Zur Überprüfung seines Tickets begibt er sich zum Schalterseiner Fluggesellschaft. Falls das Ticket in Ordnung ist, übergibt er am Schalter sein Gepäck. Falls mit dem Ticket etwas nicht stimmt, muss der Fluggast den Kundendienst konsultieren und er kann nichtmitfliegen. Das Gepäck wird zudem auf Übergewicht überprüft. Falls dem so ist, muss der Fluggast zusätzliche Kostenübernehmen. Falls aber das Gewicht in Ordnung ist, wird die Bordkarte ausgestellt.
+
+# ZUSTANDSDIAGRAMM 1
+Interpretieren Sie schriftlich das folgende Zustandsdiagramm:
+
+![](img/Zustandsdiagramm1.png)
+
+# ZUSTANDSDIAGRAMM 2
+Entwerfen Sie ein Zustandsdiagramm für eine Bestellung auf Amazon. Modellieren Sie dazu die Zustände und die Übergänge einer Bestellung vom Aufgeben der Bestellung bis hin zur Aushändigung des Paketes an den Kunden. 
+
+# C4-DIAGRAMM
+Arbeite dich in das C4-Modell zur Visualisierung von Architekturen von Softwaresystemen ein.
+https://c4model.com
+Dokumentieren Sie danach die Architektur deines Spring-Boot-Abschlussprojektes aus dem Unterricht mit dem C4-Diagrammmodell:
+-	Level 1: System Context diagram
+-	Level 2: Container diagramm
+-	Level 3: Component diagramm
+-	Level 4: Klassendiagramm (Beispielhaft nur für ein paar Komponenten aus Level 3)
+
+
 
