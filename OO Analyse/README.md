@@ -256,6 +256,7 @@ Definieren Sie die Use-Case-Details (level, complexity, status, pre-conditions, 
 
 Gegeben ist folgendes Klassendiagramm:
 ![](img/Klassendiagramm1.png)
+
 Bestimmen Sie, ob die folgenden Aussagen zum Klassendiagramm richtig oder falsch sind.
 - Es kann im System Kunden geben die nie eine Bestellung durchgeführt haben. **Richtig**
 - Die Klasse Einzahlung ist die Oberklasse der Klasse Bestellung. **Falsch**
@@ -305,7 +306,36 @@ Sie haben den Auftrag, eine Online-Videothek zu realisieren. Sie haben dazu folg
 -	Filme besitzen einen individuellen Namen und Preis.
 -	Ein Film wird über einen Streaming-Server bereitgestellt. Der Server kann hierzu einen kundenspezifischen Link generieren.
 
-//TODO
+```mermaid
+classDiagram
+    Server "1" --> "*" Film
+    Kunde "*" --> "*" Film
+    class Kunde{
+      -String kundennummer
+      -String passwort
+      -double guthaben
+      -Arraylist<Film> filmliste
+      +anmelden(kundennummer : String, passwort : String)$ : Kunde
+      +guthabenAbbuchen(preis : double) : void
+      +guthabenHinzufuegen(guthaben : double) : void
+      +leiheFilm() : void
+      +freigebenFilm() : void
+      +getter()
+      -setter()
+    }
+    
+    class Film{
+      -String name
+      -double preis
+      +getter()
+      -setter()
+    }
+    class Server{      
+      +erstelleLink(kunde : Kunde)$
+      +getter()
+      -setter()
+    }
+```
 
 
 # KLASSENDIAGRAMME 4
@@ -317,6 +347,9 @@ Das Spielobjekt ist eine abstrakte Klasse die von der Klasse Raumschiff und eine
 Interpretieren Sie schriftlich das folgende Sequenzdiagramm:
 ![](img/Sequenzdiagramm1.png)
 
+In diesem Sequenzdiagramm geht es, um die Funktion einen Kommentar zu schreiben. 
+Zu Beginn wird die mitgegebene Nachricht validiert. Danach wird eine Nachricht an den Ajax Proxy erstellt. Weiters wird ein CAPTCHA CHECK durchgeführt. Sollten keine Fehler auftreten werden die Kommentare geposted. Dazu wird eine Anfrage an den Ajax Proxy erstellt und gesendet. Der Proxy sendet den postComments an den PluckService. und dieser gibt als Antwort ein JSON zurück. Nachdem wird ein callback an das Applikations Fenster gesendet und dort werden Fehler gehandelt sofern es welche gibt. Zum Schluss werden all Kommentare angefragt.
+
 # SEQUENZDIAGRAMM 2
 Modellieren Sie für die Online-Videothek (siehe Aufgabe 3) die Film Ausleihen Funktion. Erstellen Sie dazu ein Sequenzdiagramm für folgenden Ablauf der Ausleihe:
 -	Die Videothek berechnet zuerst, ob das Guthaben des Kunden reicht um den Film zu bezahlen.
@@ -327,20 +360,38 @@ Server einen Link für den Film zu generieren.
 -	Die Videothek zeigt dem Benutzer den Link an, unter dem der Film zugreifbar ist.
 Gehen Sie davon aus, dass sich das Mitglied bereits auf der Seite des gewünschten Films beendet.
 
+```mermaid
+sequenceDiagram
+    Kunde->>+Videothek: Film ausleihen
+      opt Guthaben zu wenig
+      Videothek-->>-Kunde: Aufforderung zum Auffüllen des Guthaben
+        end
+    Videothek->>+Server: Link generieren
+    Server -->>- Videothek: Link zurücksenden
+    Videothek->>+Kunde: Link anzeigen
+```
+
 # AKTIVITÄTSDIAGRAMM 1
 Interpretieren Sie schriftlich das folgende Aktivitätsdiagramm:
 
 ![](img/Aktivit%C3%A4tsdiagramm1.png)
 
+Des Diagramm beschreibt die Aktivität, wie ein Pendler eine Ticket am Automaten kauft.
+Zu Beginn wird eine Session gestartet. Als Nächstes wird die Reiseinfo angefragt und dem Pendler zurückgegeben. Danach wird das Reiseziel eingegeben und von dem Automaten bearbeitet. Dieser fragt den Pendler für eine Zahlung und darauf gibt der Pendler seine Zahlungsinformation ein. Daraufhin werden diese Daten verarbeitet. Zuerst wird eruiert, ob ob es sich um eine Bar-oder Kartenzahlung handelt. Sollte es sich um eine Karte handelt wird die Karte von der Bank autorisiert. Nach den Zahlungstätigkeiten wird das Ticket gedruckt und ausgegeben und der Pendler nimmt sich das Ticket. Wurde mit Bargeld bezahlt wird das Wechselgeld noch ausgeworfen und der Pendler kann dieses entnehmen und zu Letzt wird Danke angezeigt.
+
 # AKTIVITÄTSDIAGRAMM 2
 Modellieren Sie schriftlich den folgenden Sachverhalt als Aktivitätsdiagramm: 
 
-Ein Fluggast ist am Flughafen angekommen. Zur Überprüfung seines Tickets begibt er sich zum Schalterseiner Fluggesellschaft. Falls das Ticket in Ordnung ist, übergibt er am Schalter sein Gepäck. Falls mit dem Ticket etwas nicht stimmt, muss der Fluggast den Kundendienst konsultieren und er kann nichtmitfliegen. Das Gepäck wird zudem auf Übergewicht überprüft. Falls dem so ist, muss der Fluggast zusätzliche Kostenübernehmen. Falls aber das Gewicht in Ordnung ist, wird die Bordkarte ausgestellt.
+Ein Fluggast ist am Flughafen angekommen. Zur Überprüfung seines Tickets begibt er sich zum Schalter seiner Fluggesellschaft. Falls das Ticket in Ordnung ist, übergibt er am Schalter sein Gepäck. Falls mit dem Ticket etwas nicht stimmt, muss der Fluggast den Kundendienst konsultieren und er kann nichtmitfliegen. Das Gepäck wird zudem auf Übergewicht überprüft. Falls dem so ist, muss der Fluggast zusätzliche Kostenübernehmen. Falls aber das Gewicht in Ordnung ist, wird die Bordkarte ausgestellt.
+
+Ankunft Flughafen -> Überprüfung der Tickets am Schalter -> Ticket in Ordnung -> Gepäck wird übergeben -> Gewicht des Gepäcks überprüfen -> bei Übergewicht Mehrkosten, ansonsten Bordkarte zustellen, Ticket nicht in Ordnung -> Kundendienst konsultieren
 
 # ZUSTANDSDIAGRAMM 1
 Interpretieren Sie schriftlich das folgende Zustandsdiagramm:
 
 ![](img/Zustandsdiagramm1.png)
+
+In diesem Diagramm wird der Zustand eines Bankautomaten dargestellt. Der initiale Zustand ist der ausgeschaltete Zustand. Durch das Starten wird zuerst der Selbsttest durchgeführt. Sollte des fehlschlagen schlägt der Zustand Out of Service an. Daraufhin folgt das Ausschalten oder ein Service. Bei erfolgreichem Selbsttest kommt der Automat in den Leerlauf. Entweder wird dann ein Service gemacht oder eine Karte hineingesteckt. Bei Zweiteren wird der Service Customer angesprochen. Dieser Beginnt nachdem die Karte gelesen wurde. Danach wird der Kunde authentifiziert, die Transaktion ausgewählt, die Transaktion durchgeführt und die Karte ausgegeben. 
 
 # ZUSTANDSDIAGRAMM 2
 Entwerfen Sie ein Zustandsdiagramm für eine Bestellung auf Amazon. Modellieren Sie dazu die Zustände und die Übergänge einer Bestellung vom Aufgeben der Bestellung bis hin zur Aushändigung des Paketes an den Kunden. 
