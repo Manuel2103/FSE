@@ -45,6 +45,10 @@ Manuel Foidl
 - [ZUSTANDSDIAGRAMM 1](#zustandsdiagramm-1)
 - [ZUSTANDSDIAGRAMM 2](#zustandsdiagramm-2)
 - [C4-DIAGRAMM](#c4-diagramm)
+  - [System Context diagram](#system-context-diagram)
+  - [Container diagramm](#container-diagramm)
+  - [Component diagramm](#component-diagramm)
+  - [Code Diagramm](#code-diagramm)
 
 
 # OBJEKTORIENTIERTE ANALYSE
@@ -79,7 +83,9 @@ Zur Modellierung der inneren Struktur eines Systems werden Strukturdiagramme her
 Ein Objektdiagramm kann als Sonderfall des Klassendiagramms angesehen werden. Während ein Klassendiagramm die allgemeinen „Schablonen“ und alle möglichen Beziehungen der Objekte untereinander modelliert, stellt das zugehörige Objektdiagramm die tatsächlich erzeugten Objekte, deren Attributwerte und Beziehungen innerhalb eines begrenzten Zeitraums der Laufzeit dar. Beispiel für ein Objektdiagramm: [Beispiel Objektdiagramm](https://de.wikipedia.org/wiki/Objektdiagramm)
 
 ## Dynamische Modellierung 
-TODO
+Dynamische Modellierung ist die Erstellung von Modellen, die das Verhalten von Systemen beschreiben, wenn sie ausgeführt werden. Diese Modelle beschreiben, wie Objekte in einem System interagieren, wie sie Nachrichten senden und empfangen, wie sich Zustände ändern und wie sich das System im Laufe der Zeit verhält.
+
+Ein Beispiel für dynamische Modellierung in UML ist das Sequenzdiagramm, das die Interaktionen zwischen Objekten in einer bestimmten Sequenz darstellt. Es zeigt, wie Nachrichten von einem Objekt zum anderen gesendet werden und wie das System auf diese Nachrichten reagiert.
 
 ### Flussdiagramm
 Ein Programmablaufplan (PAP) ist ein Ablaufdiagramm für ein Computerprogramm, das auch als Flussdiagramm (engl. flowchart) oder Programmstrukturplan bezeichnet wird. Es ist eine grafische Darstellung zur Umsetzung eines Algorithmus in einem Programm und beschreibt die Folge von Operationen zur Lösung einer Aufgabe. Beispiel: ![](img/Flowchart.png)
@@ -97,6 +103,7 @@ Bei einer Anforderungsanalyse geht man wie folgt vor:
 - Ermittlung und Analyse
 - Strukturierung und Abstimmung 
 - Prüfung und Bewertung
+  
 [Genauere Beschreibung der einzelnen Phasen](https://de.wikipedia.org/wiki/Anforderungsanalyse_(Informatik))
 ## Werkzeuge
 Für die Dokumentation kann man einen entweder eine Textverarbeitungssoftware oder ein Zeichenprogramm verwenden. Die Anforderungen können erhoben werden durch die Befragung der Stakeholder z.B. mithilfe eines Fragebogens oder Interviews.
@@ -126,7 +133,7 @@ Für die Formulierung von Epics ode User Stories werden Satzschablonen verwendet
 - Als (wer) (wann) (wo) möchte ich (was) (warum).
 Für die Erstellung der können Agile Projektmanagement-Tools verwendet werden.
 ## Dokumentation
-TODO
+Es gibt verschiedene Tools, die Sie verwenden können, um Epics und User Stories zu dokumentieren, wie beispielsweise Jira, Trello, oder Notiz-Apps wie Evernote. Wichtig ist jedoch, dass das Dokumentationsformat konsistent bleibt und alle wichtigen Informationen enthalten sind, um sicherzustellen, dass das Entwicklungsteam die Anforderungen versteht und das Produkt erfolgreich entwickeln kann.
 
 # WICHTIGE UML-DIAGRAMMARTEN
 Arbeite dich in folgende Diagrammarten ein:
@@ -365,7 +372,8 @@ sequenceDiagram
     Kunde->>+Videothek: Film ausleihen
       opt Guthaben zu wenig
       Videothek-->>-Kunde: Aufforderung zum Auffüllen des Guthaben
-        end
+      Kunde->>+Videothek: Guthaben aufladen
+    end
     Videothek->>+Server: Link generieren
     Server -->>- Videothek: Link zurücksenden
     Videothek->>+Kunde: Link anzeigen
@@ -395,6 +403,19 @@ In diesem Diagramm wird der Zustand eines Bankautomaten dargestellt. Der initial
 
 # ZUSTANDSDIAGRAMM 2
 Entwerfen Sie ein Zustandsdiagramm für eine Bestellung auf Amazon. Modellieren Sie dazu die Zustände und die Übergänge einer Bestellung vom Aufgeben der Bestellung bis hin zur Aushändigung des Paketes an den Kunden. 
+```mermaid
+stateDiagram
+    [*] --> Bestellung
+    Bestellung --> Zahlung
+    Zahlung --> Bestellung: fehlgeschlagen
+    Zahlung --> Bestätigung
+    Bestätigung --> Versandvorbereitung
+    Versandvorbereitung --> Versand
+    Versand --> Lieferung
+    Lieferung --> Kunde
+    Kunde --> Lieferung: nicht erhalten
+    Kunde -->[*]
+```
 
 # C4-DIAGRAMM
 Arbeite dich in das C4-Modell zur Visualisierung von Architekturen von Softwaresystemen ein.
@@ -403,7 +424,202 @@ Dokumentieren Sie danach die Architektur deines Spring-Boot-Abschlussprojektes a
 -	Level 1: System Context diagram
 -	Level 2: Container diagramm
 -	Level 3: Component diagramm
--	Level 4: Klassendiagramm (Beispielhaft nur für ein paar Komponenten aus Level 3)
+-	Level 4: Code Diagramm (Beispielhaft nur für ein paar Komponenten aus Level 3)
+
+## System Context diagram
+Ein System Context Diagram ist ein Diagramm, das eine Übersicht über ein System und dessen Umgebung bietet. Es zeigt, welche Systeme oder Akteure mit dem System interagieren und welche Schnittstellen zwischen ihnen bestehen. Das System Context Diagramm ist ein Werkzeug zur Visualisierung und Kommunikation von Systemgrenzen und Kontextinformationen.
+
+```mermaid
+    C4Context
+        Person(user, "Benutzer", "Der Benutzer, der das Spiel spielt")
+        System(meme, "What do you meme Applikation", "Stellt dem Benutzer verschiedene Funktionen zur Verfügung, um das Spiel zu spielen")
+        System_Ext(api, "REST API Bilder", "Diese API wird für die Bilder verwendet")
+        Rel(meme, api, "get pictures", "HTTP")
+        BiRel(user, meme, "Uses")
+        UpdateLayoutConfig($c4ShapeInRow="1", $c4BoundaryInRow="1")
+```
+
+## Container diagramm
+Ein Containerdiagramm ist eine Art von Diagramm in der Softwarearchitektur, das eine Übersicht über die Container (oder auch Komponenten) eines Systems und deren Beziehungen zueinander bietet. Container können physische oder virtuelle Systeme wie z.B. Anwendungsserver, Datenbankserver oder Webserver sein, die zusammenarbeiten, um eine Anwendung zu erstellen.
+```mermaid
+flowchart TB
+
+subgraph user[Benutzer]
+    h1[-Person-]:::type
+    d1[Benutzer der das Spiel spielt]:::description
+end
+user:::person
+
+user--Besucht die Website-->webApplication
+user--Verwendet die \n Funktionen-->singlePageApplication
+
+
+subgraph system[what do you meme]
+    subgraph webApplication[Web Anwendung]
+        direction LR
+        h2[Container: Java and Spring MVC]:::type
+        d2[Stellt die Website zur Verfügung]:::description
+    end
+    webApplication:::internalContainer
+
+    subgraph singlePageApplication[Website]
+        direction LR
+        h3[Container: JavaScript/Thymeleaf, HTML, CSS]:::type
+        d3[Stellt alle Funktionen im Browser dar.]:::description
+    end
+    singlePageApplication:::internalContainer
+
+    subgraph apiApplication[API Application]
+        direction LR
+        h5[Container: Java and Spring MVC]:::type
+        d5[Stellt Funktionen mithilfe von JSON/HTTP bereit]:::description
+    end
+    apiApplication:::internalContainer
+
+    subgraph database[Database]
+        direction LR
+        h6[Container: H2 Database ]:::type
+        d6[In Memory Datenbank zum Testen]:::description
+    end
+    database:::internalContainer
+
+    webApplication--Gibt die Website dem Browser zurück-->singlePageApplication
+    singlePageApplication--Ruft die API auf-->apiApplication
+    apiApplication--vewendet Datenbank-->database
+end
+
+
+%% Element type definitions
+
+classDef person fill:#08427b
+classDef internalContainer fill:#1168bd
+classDef externalSystem fill:#999999
+
+classDef type stroke-width:0px, color:#fff, fill:transparent, font-size:12px
+classDef description stroke-width:0px, color:#fff, fill:transparent, font-size:13px
+```
+
+## Component diagramm
+Ein Component-Diagramm ist ein Diagramm in der Softwarearchitektur, das die einzelnen Komponenten eines Systems und deren Beziehungen untereinander zeigt. Komponenten repräsentieren hierbei abgeschlossene, unabhängige Einheiten in der Softwarearchitektur, die spezifische Funktionen ausführen.
+```mermaid
+flowchart TB
+
+  subgraph singlePageApplication[Website]
+        direction LR
+        h3[Container: JavaScript/Thymeleaf, HTML, CSS]:::type
+        d3[Stellt alle Funktionen im Browser dar.]:::description
+    end
+singlePageApplication:::internalContainer
+
+subgraph database[Database]
+    direction LR
+    h6[Container: H2 Database]:::type
+    d6[In Memory Datenbank zum Testen, Speichert Bilder,Quotes und Memes]:::description
+end
+database:::internalContainer
+
+subgraph service[ServiceLayer]
+    direction LR
+    h7[Container: Spring Bean]:::type
+    d7[Stellt im System Services zur Verfügung]:::description
+end
+service:::internalContainer
+
+singlePageApplication--Make calls to-->thymeleafcontroller
+singlePageApplication--Make API calls to-->restcontroller
+thymeleafcontroller--Uses-->service
+restcontroller--Uses-->service
+
+subgraph apiApplication[API Application]
+
+
+    subgraph thymeleafcontroller[Thymeleaf Controller]
+        direction LR
+        h30[Component: Spring Thymeleaf Controller]:::type
+        d30[Wird verwendet für die verschiedensten Funktionen]:::description
+    end
+    thymeleafcontroller:::internalComponent
+
+    subgraph restcontroller[REST Controller]
+        direction LR
+        h40[Component:  REST Controller]:::type
+        d40[REST Controller für verschiedene Funktionen mittels JSON]:::description
+    end
+    restcontroller:::internalComponent
+ 
+end
+
+service--Lese und Schreib Zugriff-->database
+
+%% Element type definitions
+
+classDef person fill:#08427b
+classDef internalContainer fill:#1168bd
+classDef internalComponent fill:#4b9bea
+classDef externalSystem fill:#999999
+
+classDef type stroke-width:0px, color:#fff, fill:transparent, font-size:12px
+classDef description stroke-width:0px, color:#fff, fill:transparent, font-size:13px
+```
+
+## Code Diagramm
+Ein Code-Diagramm ist ein Diagramm, das den Code einer Softwareanwendung oder eines Systems in einer visuellen Form darstellt. Es gibt verschiedene Arten von Code-Diagrammen, aber im Allgemeinen haben sie das Ziel, den Code verständlicher und leichter zu lesen und zu verstehen.
+```mermaid
+classDiagram
+    ThymeleafController --> MemeService
+
+    RESTController --> MemeService
+    RESTController --> QuoteService
+    RESTController --> PictureService
+    MemeService <|-- MemeServiceImpl
+  
+    class ThymeleafController{
+        - QuoteService quoteservice
+        - MemeService memeservice
+        - PictureService pictureservice
+        +allQuotes()
+        +allMemes()
+        +addLike(id : long)
+        +deleteMeme(id : long)
+        ....()
+    }
+    class RESTController{
+        - QuoteService quoteservice
+        - MemeService memeservice
+        - PictureService pictureservice
+        +getRandomPicture()
+        +getPicturebyID(id : long)
+        +deleteQuotebyID(id : long)
+        ....()
+    }
+          
+    class MemeService{
+        +speichereMeme(meme : Meme)  
+        +setzeLike(id : Long)  
+        +gibMemeMitId(id : Long) 
+        ....() 
+      
+    }
+    <<interface>> MemeService
+    class MemeServiceImpl{
+        -DbZugriffMeme dbZugriffMeme
+        +speichereMeme(meme : Meme)  
+        +setzeLike(id : Long)  
+        +gibMemeMitId(id : Long) 
+        ....() 
+    }
+     class QuoteService{
+        ....() 
+      
+    }
+    <<interface>> QuoteService
+         class PictureService{
+        ....() 
+      
+    }
+    <<interface>> PictureService
+```
+
 
 
 

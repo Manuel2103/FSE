@@ -106,5 +106,93 @@ als Maven-Projekt in ihre IDE und schauen Sie sich an, wie das Projekt aufgebaut
 Starten Sie den Test AppTest über den grünen Pfeil und versichern Sie sich, dass alles korrekt läuft. Starten Sie
 auch die App (main-Methode).
 
+![](img/Aufgabe2.jpg)
+
+# AUFGABE 3: EINARBEITUNG IN DEN GEGEBENEN CODE
+Arbeiten Sie sich in den gegebenen Code zur Kinoverwaltung ein. Verwenden Sie die gegebenen Klassen
+KinoSaal, Ticket, Vorstellung, Kinoverwaltung in der App-Klasse (main-Methode), um ein Gefühl für die
+Funktionsweise des Programms zu bekommen. Führen Sie folgende Punkte durch:
+- Kinosäle anlegen
+- Vorstellungen anlegen
+- Vorstellungen über die Kinoverwaltung einplanen
+- Tickets für Vorstellungen ausgeben
+- etc.
+```java
+public class App 
+{
+    public static void main( String[] args )
+    {
+        //Saal anlegen
+        Map<Character,Integer> map = new HashMap<>();
+        map.put('A',10);
+        map.put('B',10);
+        map.put('C',15);
+        map.put('D',12);
+        KinoSaal ks = new KinoSaal("LadyX",map);
+
+        //Platz prüfen
+        System.out.println(ks.pruefePlatz('A',11));
+        System.out.println(ks.pruefePlatz('A',10));
+        System.out.println(ks.pruefePlatz('B',10));
+        System.out.println(ks.pruefePlatz('C',14));
+
+        //Vorstellung erstellen
+        Vorstellung vorstellung = new Vorstellung(ks,Zeitfenster.ABEND, LocalDate.of(2023,3,29), "Der gestiefelte Kater", 10);
+        //KinoVerwaltung erstellen und Vorstellung einplanen
+        KinoVerwaltung kinoVerwaltung = new KinoVerwaltung();
+        kinoVerwaltung.einplanenVorstellung(vorstellung);
+        //Ticket bei der Kinoverwaltung kaufen
+        kinoVerwaltung.kaufeTicket(vorstellung, 'D', 12, 21);
+    }
+}
+```
+
+# AUFGABE 4: JUNIT-TESTS FÜR KINOSAAL
+Testen Sie alle Methoden der Klasse KinoSaal (Testklasse TestKinoSaal)
+In diesem Beispiel wurde mit Mockito getestet.
+```java
+package at.itkolleg.ase.tdd.kino;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@ExtendWith(MockitoExtension.class)
+public class TestKinoSaal {
+
+    @Mock
+    private KinoSaal kinosaalMock;
+
+    @Test
+    void testKinosaalNameMock(){
+        //wenn vom Stub die getName aufgerufen wird, soll KS1 zurückkommen
+        Mockito.when(kinosaalMock.getName()).thenReturn("KS1");
+        //Schauen ob der Wert korrekt gemockt wurde
+        assertEquals("KS1", kinosaalMock.getName());
+        //Verifizieren ob getName() aufgerufen worden ist
+        Mockito.verify(kinosaalMock).getName();
+    }
+    @Test
+    void testKinosallPruefePlatzMock(){
+
+        Mockito.when(kinosaalMock.pruefePlatz('D', 12)).thenReturn(true);
+        Mockito.when(kinosaalMock.pruefePlatz('A', 13)).thenReturn(false);
+
+        assertEquals(true, kinosaalMock.pruefePlatz('D', 12));
+        assertEquals(false, kinosaalMock.pruefePlatz('A', 13));
+
+        Mockito.verify(kinosaalMock).pruefePlatz('D',12);
+        Mockito.verify(kinosaalMock).pruefePlatz('A',13);
+    }  
+}
+```
+# AUFGABE 5: JUNIT-TESTS FÜR VORSTELLUNG
+Testen Sie alle Methoden der Klasse Vorstellung (Testklasse TestVorstellung).
+In diesem Beispiel wird kein Mockito verwendet.
+
 
 
