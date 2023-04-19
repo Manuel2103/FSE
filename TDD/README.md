@@ -44,7 +44,6 @@ First principles of testing stand for
 Der Wiederentdecker von TDD Kent Beck verrät, dass er die Idee aus einem äußerst alten Programmierhandbuch übernommen hat. Tatsächlich lassen sich die Ursprünge bis hin zu John von Neumann ins Jahr 1957 zurückverfolgen, der TDD seinerzeit mit vorgestanzten Lochstreifen betrieb.
 Erst 1989 entwickelte Kent Beck sUnit für Smalltalk und später jUnit für Java und begründete damit das moderne TDD. Über 60 Jahre TDD sind Grund genug zu fragen, wie sich die Methodik seither weiterentwickelt hat.
 
-
 ## Testarten
 Test werden in verschiedenen Arten unterteil. Diese Arten unterscheiden sich in der Art was getestet wird. 
 ### Unit-Tests (Sociable, Solitary, Mocks)
@@ -58,6 +57,7 @@ erfolgreich dem Unit Test unterzogen wurden)
 Schnittstellen korrekt spezifiziert und implementiert sind
 - Ausführung in speziellen Testumgebungen
 - Einsatz von Automatisierungswerkzeugen äußerst sinnvoll
+
 ### UI-Tests / End-To-End Tests / Systemtests
 - Test auf Funktionsfähigkeit des gesamten Systems entsprechend
 der Anforderungen (Spezifikation)
@@ -193,6 +193,119 @@ public class TestKinoSaal {
 # AUFGABE 5: JUNIT-TESTS FÜR VORSTELLUNG
 Testen Sie alle Methoden der Klasse Vorstellung (Testklasse TestVorstellung).
 In diesem Beispiel wird kein Mockito verwendet.
+
+```java
+public class TestVorstellung {
+    private Vorstellung vorstellung;
+    private KinoSaal ks;
+
+    @BeforeEach
+    void setup(){
+        Map<Character,Integer> map = new HashMap<>();
+        map.put('A',10);
+        map.put('B',10);
+        map.put('C',15);
+        map.put('D',12);
+        ks = new KinoSaal("Saal 5",map);
+        vorstellung = new Vorstellung(ks, Zeitfenster.ABEND, LocalDate.of(2023,3,29), "Avengers 10", 8);
+    }
+
+    @Test
+    void testGetterVorstellung(){
+        assertEquals(ks, vorstellung.getSaal());
+        assertEquals(LocalDate.of(2023,3,29),vorstellung.getDatum());
+        assertEquals(Zeitfenster.ABEND,vorstellung.getZeitfenster());
+        assertEquals("Avengers 10",vorstellung.getFilm());
+    }
+    @Test
+    void testKaufeTicket(){
+
+        Ticket ticket1 = vorstellung.kaufeTicket('A',10,10);
+        assertEquals('A', ticket1.getReihe());
+        assertEquals(10,ticket1.getPlatz());
+        assertEquals(LocalDate.of(2023,3,29),ticket1.getDatum());
+        assertEquals(Zeitfenster.ABEND,ticket1.getZeitfenster());
+        assertEquals("Saal 5",ticket1.getSaal());
+
+        //Testen, ob die die Exception geworfen wird.
+        Exception exception = assertThrows(IllegalArgumentException.class, ()->{
+            vorstellung.kaufeTicket('A',10,0);
+        });
+        assertTrue(exception.getMessage().contains("Nicht ausreichend Geld."));
+    }
+}
+```
+# AUFGABE 6: JUNIT-TESTS FÜR KINOVERWALTUNG
+Testen Sie alle Methoden der Klasse KinoVerwaltung (Testklasse TestKinoverwaltung).
+
+```java
+public class TestKinoverwaltung {
+
+    KinoVerwaltung kinoVerwaltung;
+    List<Vorstellung> vorstellungen;
+    private Vorstellung vorstellung;
+    private KinoSaal ks;
+
+    @BeforeEach
+    void setup(){
+        kinoVerwaltung = new KinoVerwaltung();
+        Map<Character,Integer> map = new HashMap<>();
+        map.put('A',10);
+        map.put('B',10);
+        map.put('C',15);
+        map.put('D',12);
+        ks = new KinoSaal("Saal 5",map);
+        vorstellung = new Vorstellung(ks, Zeitfenster.ABEND, LocalDate.of(2023,3,29), "Avengers 10", 8);
+    }
+    @Test
+    void testeinplanenVorstellung(){
+        kinoVerwaltung.einplanenVorstellung(vorstellung);
+        //Prüfen die Vorstellung in die Liste aufgenommen worden ist
+        assertTrue(kinoVerwaltung.getVorstellungen().contains(vorstellung));
+        //Testen, ob die Exception geworfen worden wird, wenn die Vorstellung schon in der Liste vorhanden ist.
+        Exception exception = assertThrows(IllegalArgumentException.class, ()->{
+            kinoVerwaltung.einplanenVorstellung(vorstellung);
+        });
+        assertTrue(exception.getMessage().contains("Die Vorstellung ist bereits eingeplant"));
+    }
+    @Test
+    void testkaufeTicket(){
+        Ticket ticket = new Ticket(ks.getName(), Zeitfenster.ABEND, LocalDate.of(2023, 3, 29), 'A', 10);
+        Ticket ticketfunc = kinoVerwaltung.kaufeTicket(vorstellung, 'A', 10, 10);
+        assertEquals(ticket.getPlatz(),ticketfunc.getPlatz());
+        assertEquals(ticket.getReihe(),ticketfunc.getReihe());
+        assertEquals(ticket.getSaal(),ticketfunc.getSaal());
+        assertEquals(ticket.getZeitfenster(),ticketfunc.getZeitfenster());
+
+        //Testen, ob der Platz schon belegt ist.
+        Exception exception = assertThrows(IllegalStateException.class, ()->{
+            kinoVerwaltung.kaufeTicket(vorstellung, 'A', 10, 10);
+        });
+        assertTrue(exception.getMessage().contains("Der Platz " + ticket.getReihe() + ticket.getPlatz() + " ist bereits belegt."));
+    }
+}
+```
+# AUFGABE 7: JUNIT-TESTS ADVANCED
+Falls nicht schon in den vorhergehenden Aufgaben passiert, testen Sie folgende Punkte unter Verwendung der
+fortgeschrittenen Features von JUNIT 5:
+1. Schreiben Sie einen Test, der validiert, dass das Anlegen einer Vorstellung korrekt funktioniert. Der
+Test sollte eine fachliche Bezeichnung haben und die Assertions sollten bei Validierungsfehler eine
+Hinweistext liefern.
+
+
+2. Schreiben Sie einen Test, der validiert, dass das Einplanen mehrerer Vorstellungen korrekt
+funktioniert. Stellen Sie zudem sicher, dass beim möglichen Auftreten eines Fehlers trotzdem alle
+Validierungen ausgeführt werden.
+3. Schreiben Sie einen Test, der sicherstellt, dass ein Fehler geworfen wird, wenn eine Veranstaltung
+doppelt eingeplant wird.
+4. Schreiben Sie einen parametrisierten Test, der mehrere Ticketkäufe mit unterschiedlichen Parametern
+überprüft.
+5. Schreiben Sie eine dynamische TestFactory die den Ticketkauf mit zufälligen Werten bombardiert. Der
+Test soll sicherstellen, dass der Ticketkauf entweder funktioniert oder nur einen der definierten
+Fehlermeldungen (z.B. new IllegalArgumentException("Nicht ausreichend Geld.")) ausgibt. Die Tests
+müssen reproduzierbar sein.
+
+
 
 
 

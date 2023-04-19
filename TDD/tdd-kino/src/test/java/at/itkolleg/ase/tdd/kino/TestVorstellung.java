@@ -6,14 +6,12 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TestVorstellung {
     private Vorstellung vorstellung;
     private KinoSaal ks;
-    //private Ticket ticket;
 
     @BeforeEach
     void setup(){
@@ -24,7 +22,6 @@ public class TestVorstellung {
         map.put('D',12);
         ks = new KinoSaal("Saal 5",map);
         vorstellung = new Vorstellung(ks, Zeitfenster.ABEND, LocalDate.of(2023,3,29), "Avengers 10", 8);
-        //ticket = new Ticket(ks.getName(), Zeitfenster.ABEND, LocalDate.of(2023,3,29),'A',10);
     }
 
     @Test
@@ -36,12 +33,23 @@ public class TestVorstellung {
     }
     @Test
     void testKaufeTicket(){
-        //assertTrue(vorstellung.kaufeTicket('A',10,10).equals());
+
         Ticket ticket1 = vorstellung.kaufeTicket('A',10,10);
         assertEquals('A', ticket1.getReihe());
         assertEquals(10,ticket1.getPlatz());
         assertEquals(LocalDate.of(2023,3,29),ticket1.getDatum());
         assertEquals(Zeitfenster.ABEND,ticket1.getZeitfenster());
         assertEquals("Saal 5",ticket1.getSaal());
+
+        //Testen, ob die die Exception geworfen wird.
+        Exception exception = assertThrows(IllegalArgumentException.class, ()->{
+            vorstellung.kaufeTicket('A',10,0);
+        });
+        assertTrue(exception.getMessage().contains("Nicht ausreichend Geld."));
+    }
+
+    @Test
+    void testErstellungVorstellung(){
+        
     }
 }
