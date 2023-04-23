@@ -45,9 +45,8 @@ public class AppTest {
     void testKinosaalMockName() {
         //wenn vom Stub die getName aufgerufen wird, soll KS1 zurückkommen
         Mockito.when(kinosaalMock.getName()).thenReturn("KS1");
-        //Schauen ob der Wert korrekt gemockt wurde
+        //Schauen, ob der Wert korrekt gemockt wurde
         assertEquals("KS1", kinosaalMock.getName());
-
 
         /*
             Verifikationen sind Beheviour Testing. Sie testen nicht das Ergebnis eines
@@ -56,12 +55,6 @@ public class AppTest {
             Verifizieren, dass getName() aufgerufen wurde:
          */
         Mockito.verify(kinosaalMock).getName();
-
-        /*
-            Verifizieren, dass pruefePlatz mit bestimmten Params aufgerufen wurde.
-            (zum Testen auskommentieren)
-         */
-        //Mockito.verify(kinosaalMock).pruefePlatz('A',12);
 
         /*
             weitere Verifikationsmöglichkeiten (Behaviour Testing):

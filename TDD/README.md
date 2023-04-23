@@ -291,19 +291,193 @@ fortgeschrittenen Features von JUNIT 5:
 1. Schreiben Sie einen Test, der validiert, dass das Anlegen einer Vorstellung korrekt funktioniert. Der
 Test sollte eine fachliche Bezeichnung haben und die Assertions sollten bei Validierungsfehler eine
 Hinweistext liefern.
-
+```java
+    @Test
+    void testErstellungVorstellung(){
+        Vorstellung vorstellung1 = new Vorstellung(ks, Zeitfenster.NACHMITTAG, LocalDate.of(2023,10,10), "Iron Man", 10);
+        assertEquals(ks, vorstellung1.getSaal(), "Saal konnte nicht zugewiesen werden");
+        assertEquals(LocalDate.of(2023,10,10),vorstellung1.getDatum(), "Datum ist inkorrekt");
+        assertEquals(Zeitfenster.NACHMITTAG,vorstellung1.getZeitfenster(), "Zeitfenster nicht korrekt");
+        assertEquals("Iron Man",vorstellung1.getFilm(), "Film nicht richtig zugewiesen");
+    }
+```
 
 2. Schreiben Sie einen Test, der validiert, dass das Einplanen mehrerer Vorstellungen korrekt
 funktioniert. Stellen Sie zudem sicher, dass beim möglichen Auftreten eines Fehlers trotzdem alle
 Validierungen ausgeführt werden.
+```java
+    @Test
+    void testeinplanenVorstellung(){
+        kinoVerwaltung.einplanenVorstellung(vorstellung);
+        //Prüfen die Vorstellung in die Liste aufgenommen worden ist
+        assertTrue(kinoVerwaltung.getVorstellungen().contains(vorstellung));
+    }
+```
 3. Schreiben Sie einen Test, der sicherstellt, dass ein Fehler geworfen wird, wenn eine Veranstaltung
 doppelt eingeplant wird.
+```java
+    @Test
+    void testeinplanenVorstellungFehler(){
+        kinoVerwaltung.einplanenVorstellung(vorstellung);
+        //Testen, ob die Exception geworfen worden wird, wenn die Vorstellung schon in der Liste vorhanden ist.
+        Exception exception = assertThrows(IllegalArgumentException.class, ()->{
+            kinoVerwaltung.einplanenVorstellung(vorstellung);
+        });
+        assertTrue(exception.getMessage().contains("Die Vorstellung ist bereits eingeplant"));
+    }
+```
+
 4. Schreiben Sie einen parametrisierten Test, der mehrere Ticketkäufe mit unterschiedlichen Parametern
 überprüft.
+```java
+ private static Stream<Arguments> provideParametersForKaufeTicket() {
+        return Stream.of(
+                Arguments.of('A', 10, 9.50f),
+                Arguments.of('C', 15, 10f),
+                Arguments.of('B', 10, 11.40f)
+        );
+    }
+    @ParameterizedTest
+    @MethodSource ("provideParametersForKaufeTicket")
+    void testKaufeTicket(char reihe, int platz, float geld){
+        Ticket ticket1 =  vorstellung.kaufeTicket(reihe, platz, geld);
+        assertEquals(reihe, ticket1.getReihe());
+        assertEquals(platz, ticket1.getPlatz());
+    }
+```
+
 5. Schreiben Sie eine dynamische TestFactory die den Ticketkauf mit zufälligen Werten bombardiert. Der
 Test soll sicherstellen, dass der Ticketkauf entweder funktioniert oder nur einen der definierten
 Fehlermeldungen (z.B. new IllegalArgumentException("Nicht ausreichend Geld.")) ausgibt. Die Tests
 müssen reproduzierbar sein.
+```java
+  @TestFactory
+    Stream<DynamicTest> dynamicTestsFromStreamFactoryMethodKaufeTicketReihe() {
+
+        //Stream mit den Testwerten
+        Stream<Named<Character>> inputStream = Stream.of(
+                named("Test Reihe A", 'A'),
+                named("Test Reihe B", 'B'),
+                named("Test Reihe D", 'F'),
+                named("Test Reihe C", 'C')
+
+        );
+        // Returns a stream of dynamic tests die prüfen, ob die Reihe richtig angelegt worden ist.
+        return DynamicTest.stream(inputStream,
+                reihe -> assertTrue(vorstellung.kaufeTicket(reihe, 10, 10).getReihe()==reihe));
+    }
+    @TestFactory
+    Stream<DynamicTest> dynamicTestsFromStreamFactoryMethodKaufeTicketPlatz() {
+
+        //Stream mit den Testwerten
+        Stream<Named<Integer>> inputStream = Stream.of(
+                named("Test Platz 10", 10),
+                named("Test Platz 15", 15),
+                named("Test Platz 12", 12),
+                named("Test Platz 17", 7),
+                named("Test Platz 10", 10)
+        );
+        // Returns a stream of dynamic tests die prüfen, ob der Platz richtig angelegt worden ist.
+        return DynamicTest.stream(inputStream,
+                platz -> assertTrue(vorstellung.kaufeTicket('A', platz, 10).getPlatz()==platz));
+    }
+```
+
+
+# AUFGABE 8: MOCKITO EINFÜHRUNG
+Lesen Sie sich in das Mocking-Framework Mockito ein (Links siehe Moodle im Abschitt „Input zu Mockito“).
+Verwenden Sie die wesentlichen Mockito-Möglichkeiten praktisch in kleinen Programmen.
+
+Mockito ermöglicht Entwicklern, Mock-Objekte zu erstellen, um Tests für Komponenten oder Systeme durchzuführen, die von anderen Komponenten abhängen.
+
+Mockito erleichtert das Testen von isolierten Komponenten, da es Entwicklern ermöglicht, die Interaktionen zwischen Komponenten zu überprüfen, ohne die tatsächliche Implementierung einer Komponente zu verwenden. Dadurch können Entwickler schneller und effektiver testen und Feedback zu ihren Tests erhalten, um Probleme frühzeitig im Entwicklungsprozess zu identifizieren und zu beheben.
+
+Beispiel eines Mocks:
+```java
+@Test
+void testKinosaalMockName() {
+    //wenn vom Stub die getName aufgerufen wird, soll KS1 zurückkommen
+    Mockito.when(kinosaalMock.getName()).thenReturn("KS1");
+    //Schauen, ob der Wert korrekt gemockt wurde
+    assertEquals("KS1", kinosaalMock.getName());
+
+    /*
+        Verifikationen sind Beheviour Testing. Sie testen nicht das Ergebnis eines
+        Aufrufs, sondern sie testen, ob z.B. oder wie oft ein Aufruf stattgefunden hat.
+
+        Verifizieren, dass getName() aufgerufen wurde:
+        */
+    Mockito.verify(kinosaalMock).getName();
+
+    /*
+        weitere Verifikationsmöglichkeiten (Behaviour Testing):
+        https://www.baeldung.com/mockito-verify
+        */
+}
+``` 
+
+# AUFGABE 9: SELENIUM EINFÜHRUNG
+Lesen Sie sich in das Browser-Testframework Selenium ein (Links siehe Moodle im Abschitt „Input zu
+Selenium“).
+Verwenden Sie das gegebene Beispiel und das Tutorial „Guide to Selenium with JUnit / TestNG“ um die
+Möglichkeiten von Selenium praktisch auszuprobieren
+
+Habe das Projekt wie im Moodle Kurs beschrieben leider traten weitere Fehler aus. Deshalb wird die Funktionsweise von Selenium beschrieben.
+
+Selenium ist ein Tool für die Automatisierung von Webbrowsern. Es automatisierte Tests zu erstellen, die mit verschiedenen Webanwendungen interagieren können. Selenium unterstützt die gängigen Webbrowser wie Chrome, Firefox und Safari.
+
+In dem bereitgestellten Beispiel wird zum Beispiel getestet, ob der richtige Titel der Webseite zurückkommt. Um Selenium zu verwenden werden Einstellungen in einer SeleniumConfig Klasse getroffen und diese werden der zu testenden Webseite. Somit kann, wie unten zu sehen, der Titel der Webseite getestet werden.
+
+```java
+@Before
+    public void setUp() {
+        config = new SeleniumConfig();
+        homePage = new BaeldungHomePage(config);
+        about = new BaeldungAbout(config);
+    }
+ @Test
+    public void givenHomePage_whenNavigate_thenTitleMatch() {
+        homePage.navigate();
+        assertThat(homePage.getPageTitle(), is("Baeldung"));
+    }
+```
+
+# AUFGABE 10: TDD IST DEAD
+Der Diskurs über Sinn und Unsinn von TDD in der Praxis ist durchaus kontroversiell. TDD hat offensichtlich nicht
+nur Vorteile.
+Versuch über folgenden Link herauszufinden, welche Argumente Kritiker und Befürworter zum Thema TDD
+bzw. automatisiertem Testen von Code ins Treffen führen und übertrage deine Erkenntnisse in die eigene
+Praxis.
+
+Vorteile:
+- hohe Testabdeckung
+- Ergebnis ist ein sehr gut getesteter Code und sehr gut strukturierten Code durch Red-Green-Refactoring
+- Niedrige Kopplung, hohe Kohäsion, durch das strukturierte Arbeiten
+- stellt sicher, dass die Software so funktioniert, wie sie funktionieren soll
+
+
+Nachteile: 
+- Zeitaufwand sehr hoch
+- TDD ist nur gut anwendbar, wenn das genaue Ziel der Anwendung bekannt ist.
+- Refactoring ist sehr zäh, da auch die Tests geändert werden müssen.
+- wenig Flexibilität 
+  
+Und noch eine Frage: wie kann eine KI beim automatischen Testen von Software hilfreich sein? Recherchiere!
+
+KI-Testautomatisierung lässt sich in drei Schritte zusammenfassen:
+
+- Zuerst müssen Tester die KI mit Daten für das konkrete Testobjekt trainieren. Diese Daten umfassen zum Beispiel den Quellcode der Software, das User Interface, Logs oder bereits vorhandene Testdaten. Inzwischen gibt es vortrainierte KI-Modelle, die Erlerntes generalisieren und auf verschiedene Testfälle anwenden können. In einem Zwischenschritt analysiert die KI, ob die bisherigen Tests den Code abdecken, vollständig sind und akkurat arbeiten.
+- In einem zweiten Schritt generiert die KI Testfälle – basierend auf den Erkenntnissen der vorhandenen Daten – und führt diese Tests selbstständig aus. An dieser Stelle müssen Tester die Ergebnisse in der Regel noch manuell überprüfen.
+- Zuletzt speist die KI die Ergebnisse der Tests wieder ins System ein, um die eigenen Tests kontinuierlich zu verbessern und an das konkrete Testobjekt anzupassen.
+
+**Verschiedene Ansätze des KI-basierten Testens**
+
+Zunächst gibt es vier grundsätzliche Herangehensweisen, KI-Testautomatisierung umzusetzen.
+
+- Differenzierendes Testen: KI vergleicht hierbei Software- oder App-Versionen und stellt die Unterschiede fest. Sie analysiert diese Unterschiede in Hinblick auf codebasierte Probleme und Sicherheitslücken. Vor allem Code-Scanning und Unit Tests gehen differenzierend vor.
+- Visuelles Testen: Dieser Ansatz beruht auf bild-basiertem Lernen. Die KI vergleicht Software-Anwendungen auf optischer Ebene. Hier stechen die Fähigkeiten von KI besonders hervor.
+- Deklaratives Testen: Künstliche Intelligenz kann dabei helfen, repetitive und fehleranfällige Tests zu automatisieren. Dafür identifiziert sie, was ein Test bezwecken möchte, und berechnet, wie wahrscheinlich es ist, dass er fehlschlägt. Auf dieser Grundlage entscheidet die KI dann selbstständig, ob sie den Test im konkreten Fall ausführt. Dieses Verfahren steigert die Produktivität und Stabilität von automatischem Testen erheblich.
+- Selbstheilende Automatisierung: Hierbei handelt es sich letztlich um eine KI-basierte Autokorrektur von fehlerhaften Tests. Die „Selbstheilungskräfte“ von KI machen Testautomatisierung berechenbarer, zuverlässiger und pflegeleichter.
 
 
 

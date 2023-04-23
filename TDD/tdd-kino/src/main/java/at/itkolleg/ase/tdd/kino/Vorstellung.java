@@ -42,6 +42,7 @@ public class Vorstellung {
         return datum;
     }
 
+
     Ticket kaufeTicket(char reihe, int platz, float geld) {
         if (geld < preis) {
             throw new IllegalArgumentException("Nicht ausreichend Geld.");

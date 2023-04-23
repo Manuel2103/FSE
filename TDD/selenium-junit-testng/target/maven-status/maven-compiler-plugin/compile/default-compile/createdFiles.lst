@@ -1,0 +1,7 @@
+com\baeldung\selenium\pages\BaeldungHomePage.class
+com\baeldung\selenium\models\BaeldungAbout.class
+com\baeldung\selenium\pages\BaeldungAboutPage.class
+com\baeldung\selenium\SeleniumExample.class
+com\baeldung\selenium\tabs\TabHelper.class
+com\baeldung\selenium\pages\StartHerePage.class
+com\baeldung\selenium\config\SeleniumConfig.class

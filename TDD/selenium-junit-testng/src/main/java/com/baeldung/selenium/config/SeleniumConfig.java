@@ -29,7 +29,7 @@ public class SeleniumConfig {
     }
 
     private static String findFile(String filename) {
-        String[] paths = { "", "bin/", "target/classes" }; // if you have chromedriver somewhere else on the path, then put it here.
+        String[] paths = { "", "bin/", "target/classes", "E:\\manue\\Imst\\Kolleg\\AAIF_Semster_5_6\\FSE_Land\\FSE\\TDD\\selenium-junit-testng\\geckodriver" }; // if you have chromedriver somewhere else on the path, then put it here.
         for (String path : paths) {
             if (new File(path + filename).exists())
                 return path + filename;
