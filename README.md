@@ -2,7 +2,7 @@
 
 Dokumentation und Mitschrift für fortgeschrittene Software Entwicklung.
 
-Manuel Foidl
+Von Manuel Foidl
 
 # Inhaltsverzeichnis
 
