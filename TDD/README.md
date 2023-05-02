@@ -28,7 +28,6 @@ Bei TDD werden bei dem Erstellen eines neuen Projekts mit den Tests begonnen. Da
 
 Unit-Tests und mit ihnen getestete Units werden stets parallel entwickelt. Die eigentliche Programmierung erfolgt in kleinen, wiederholten Mikroiterationen. Eine solche Iteration, die nur wenige Minuten dauern sollte, hat drei Hauptteile, die man im englischen Red-Green-Refactor nennt.
 
-
 ## FIRST-Acronym
 
 First principles of testing stand for
@@ -37,7 +36,7 @@ First principles of testing stand for
 - Isolated/Independent
 - Repeatable
 - Self-validating
-- thorough
+- Timely
 
 
 ## Kent Beck

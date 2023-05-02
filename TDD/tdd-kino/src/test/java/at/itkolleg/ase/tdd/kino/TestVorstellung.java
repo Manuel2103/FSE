@@ -57,10 +57,8 @@ public class TestVorstellung {
         assertEquals(reihe, ticket1.getReihe());
         assertEquals(platz, ticket1.getPlatz());
     }
-
     @TestFactory
     Stream<DynamicTest> dynamicTestsFromStreamFactoryMethodKaufeTicketReihe() {
-
         //Stream mit den Testwerten
         Stream<Named<Character>> inputStream = Stream.of(
                 named("Test Reihe A", 'A'),
