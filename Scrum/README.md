@@ -30,6 +30,7 @@ Arbeiten Sie sich in die wesentlichen Aspekte von SCRUM ein:
 ## Ablauf: Wie laufen SCRUM-Projekte ab?
    SCRUM-Projekte 
    Überblick:
+
    ![](img/scrum_ablauf.jpg)
 
 ## Ereignisse: Sprint Planning, Daily Scrum, Sprint Review, Sprint Retrospective, Backlog Refinement
@@ -125,9 +126,11 @@ Denken Sie sich ein fiktives Softwareentwicklungsprojekt aus und definieren Sie 
 Es werden User Stories, eine Bewertung nach den INVEST Kriterien, sowie Task für eine Kinoverwaltung erstellt.
 
 User Stories:
+
 ![](img/Tabelle_User_Stories.jpg)
 
 Für die Priorisierung wurde folgendes Punkteschema verwendet:
+
 ![](img/Priorisierung.jpg)
 
 Bewertung nach den INVEST Kriterien.
@@ -139,12 +142,14 @@ Bewertung nach den INVEST Kriterien.
 - Testable – überprüfbar. Ihre erfolgreiche Umsetzung sollte sich mit objektiven Kriterien überprüfen lassen.
 
 Tabelle der fertigen Bewertung:
+
 ![](img/Tabelle_Invest.jpg)
 
 
 Pro User-Story-Card werden Tasks (Aufgaben für Entwickler und Tester) definiert.
 
 Tabelle der Tasks:
+
 ![](img/Tabelle_Tasks.jpg)
 
 
@@ -160,11 +165,13 @@ Dazu wurde ein neues Repository auf Github erstellt und die Mitglieder hinzugef�
 
 Zu Beginn werden die User-Stories als Issues angelegt: 
 
-![](img/Github_Scrum1.png)
+![](img/Github_Scrum1.jpg)
 
 Alle Issues:
 
 ![](img/Github_Scrum2.png)
+
+
 
 
 
