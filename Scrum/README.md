@@ -14,9 +14,13 @@ Manuel Foidl
   - [Rollen: Scrum-Master, Product-Owner, Developer](#rollen-scrum-master-product-owner-developer)
   - [Artefakte: User Stories, Product Backlog, Sprint Backlog, Product Increment, Burndown-Chart](#artefakte-user-stories-product-backlog-sprint-backlog-product-increment-burndown-chart)
 - [AUFGABE 2: SCRUM MIT GITLAB ODER GITHUB](#aufgabe-2-scrum-mit-gitlab-oder-github)
+  - [Gitlab](#gitlab)
+  - [Github](#github)
 - [AUFGABE 3: USER-STORIES](#aufgabe-3-user-stories)
 - [AUFGABE 4: ABWICKLUNG MIT GITLAB ODER GITHUB](#aufgabe-4-abwicklung-mit-gitlab-oder-github)
 - [AUFGABE 5: AGILES PM, VERSIONSKONTROLLE UND CI](#aufgabe-5-agiles-pm-versionskontrolle-und-ci)
+  - [Trunkbased Development](#trunkbased-development)
+  - [Github Flow](#github-flow)
 - [AUFGABE 6: AGILES PM, VERSIONSKONTROLLE IN DER PRAXIS](#aufgabe-6-agiles-pm-versionskontrolle-in-der-praxis)
 
 
@@ -31,7 +35,7 @@ Arbeiten Sie sich in die wesentlichen Aspekte von SCRUM ein:
    SCRUM-Projekte 
    Überblick:
 
-   ![](img/scrum_ablauf.jpg)
+   ![](images/scrum_ablauf.jpg)
 
 ## Ereignisse: Sprint Planning, Daily Scrum, Sprint Review, Sprint Retrospective, Backlog Refinement
 
@@ -102,7 +106,7 @@ Das Burn-Down-Chart dient der Visualisierung bereits geleisteter und noch verble
   
 Beim Sprint Burndown wird auf der horizontalen Achse der Zeitverlauf in Tagen und auf der vertikalen Achse die Anzahl der noch zu erledigenden Tasks aufgetragen. So ergibt sich eine Linie von offenen Aufgaben, die im Idealfall am Sprintende die Nulllinie trifft. Über das Sprint Burndown ist es möglich, die Erreichung des Sprint-Ziels besser abzuschätzen. Das Entwicklungsteam aktualisiert im Daily Scrum das Sprint Burndown.
 
-![](img/SampleBurndownChart.png)
+![](images/SampleBurndownChart.png)
 
 # AUFGABE 2: SCRUM MIT GITLAB ODER GITHUB
 Ermitteln Sie, wie man in GitLab oder GitHub SCRUM-Projektmanagement durchführt. Setzen Sie dazu die
@@ -111,7 +115,26 @@ Möglichkeiten in den beiden Plattformen kreativ ein, um die in 1) ermittelten P
 Sie sollten nach der Bearbeitung eine für Sie konsistente Vorgehensweise zum Einsatz von GitLab oder GitHub
 zur Unterstützung von SCRUM-Projekten gefunden haben.
 
+## Gitlab
+GitLab bietet viele Funktionen, die es ermöglichen, Scrum-Prozesse zu implementieren und zu verwalten. Hier sind einige Schritte, die Ihnen helfen können, Scrum in GitLab umzusetzen:
 
+1. Erstellung eines Projekt: Ein neues GitLab-Projekt oder ein vorhandenes Projekt dient als Basis für ein Scrum-Projekt.
+
+2. Backlog anlegen: Ein Backlog legt man an, indem man alle Aufgaben und User Stories speichern, die im Projekt umgesetzt werden sollen. Dies kann eine Liste von Issues oder Epics in GitLab sein.
+
+3. Erstellung Sprints: Sprints werden erstellt, indem Meilensteine in GitLab verwendet werden. Ein Meilenstein kann einen Zeitrahmen definieren, in dem bestimmte Aufgaben abgeschlossen werden müssen.
+
+4. Aufgaben zuweisen: Aufgaben oder User Stories können bestimmten Sprints zugeordnet werden, indem man Labels oder Meilensteine verwendet.
+
+5. Verfolgen Sie den Fortschritt: Verfolgen Sie den Fortschritt Ihres Teams, indem Sie Issues und Merge Requests in GitLab erstellen und diese mit den entsprechenden Aufgaben oder User Stories verknüpfen.
+
+6. Verwaltung des Meetings: GitLab-Integration mit Tools wie Zoom oder Google Meet, um Meetings wie das Daily Scrum oder Sprint Planning durchzuführen. 
+   
+7. Berichte und Analysen: GitLab bietet Reporting und Analytics-Funktionen, um eine bessere Sicht auf die Performance des Teams und Projekts zu erhalten. Dashboards und Diagramme helfen, Trends zu erkennen und Probleme frühzeitig zu erkennen.
+
+## Github
+
+GitHub bietet ähnliche Funktionen wie GitLab, um agile Prozesse wie Scrum zu unterstützen. Meist heißen die selben Funktionen nur anders.
 
 # AUFGABE 3: USER-STORIES
 
@@ -127,11 +150,11 @@ Es werden User Stories, eine Bewertung nach den INVEST Kriterien, sowie Task fü
 
 User Stories:
 
-![](img/Tabelle_User_Stories.jpg)
+![](images/Tabelle_User_Stories.jpg)
 
 Für die Priorisierung wurde folgendes Punkteschema verwendet:
 
-![](img/Priorisierung.jpg)
+![](images/Priorisierung.jpg)
 
 Bewertung nach den INVEST Kriterien.
 - Independent – unabhängig. Sie sollte nach Möglichkeit nicht von anderen User Stories abhängen.
@@ -143,15 +166,14 @@ Bewertung nach den INVEST Kriterien.
 
 Tabelle der fertigen Bewertung:
 
-![](img/Tabelle_Invest.jpg)
+![](images/Tabelle_Invest.jpg)
 
 
 Pro User-Story-Card werden Tasks (Aufgaben für Entwickler und Tester) definiert.
 
 Tabelle der Tasks:
 
-![](img/Tabelle_Tasks.jpg)
-
+![](images/Tabelle_Tasks.jpg)
 
 
 # AUFGABE 4: ABWICKLUNG MIT GITLAB ODER GITHUB
@@ -165,16 +187,40 @@ Dazu wurde ein neues Repository auf Github erstellt und die Mitglieder hinzugef�
 
 Zu Beginn werden die User-Stories als Issues angelegt: 
 
-![](img/Github_Scrum1.jpg)
+![](images/Github_Scrum1.jpg)
 
 Alle Issues:
 
-![](img/Github_Scrum2.png)
+![](images/Github_Scrum2.jpg)
+
+Nachdem alle Issues erstellt worden sind, wird ein Taskboard für den ersten Sprint erstellt. Das Taskboard schaut wie folgt aus: 
+
+![](images/Github_Scrum3.jpg)
+
+Danach werden die Issues, die in diesem Sprint erledigt werden, zu dem Taskboard hinzugefügt.
+
+![](images/Github_Scrum4.jpg)
+
+Sind die Issues hinzugefügt, müssen diese mit dem Label Task versehen werden.
+
+![](images/Github_Scrum7.jpg)
+
+Anschließen können die Teilnehmen zu den Task zugeordnet werden.
+
+![](images/Github_Scrum9.jpg)
+
+Die bearbeiten Tasks können nun mittels Drag-and-Drop verschoben werden. 
+
+![](images/Github_Scrum10.jpg)
+
+Github bietet eine Funktion für die Erstellung einer Grafik die den Status des Sprints wiederspiegelt.
+
+![](images/Github_Scrum11.jpg)
 
 
+Für den nächsten Sprint muss ein neues Taskboard erstellt werden. 
 
-
-
+![](images/Github_Scrum13.jpg)
 
 # AUFGABE 5: AGILES PM, VERSIONSKONTROLLE UND CI
 Recherchieren und überlegen Sie, wie leichtgewichtige Versionskontrollmechanismen wie Trunkbased
@@ -182,12 +228,52 @@ Development oder GitHub Flow zusammen mit Continuous Integration Features der g�
 Codeversionierungsplattformen (GitHub Actions, GitLab CI/CD) und automatisiertem Testen möglichst
 produktiv und effizient in Verbindung mit SCRUM eingesetzt werden können.
 
+## Trunkbased Development
+
+Trunk-based development is a version control management practice where developers merge small, frequent updates to a core “trunk” or main branch. It’s a common practice among DevOps teams and part of the DevOps lifecycle since it streamlines merging and integration phases. In fact, trunk-based development is a required practice of CI/CD. Developers can create short-lived branches with a few small commits compared to other long-lived feature branching strategies. As codebase complexity and team size grow, trunk-based development helps keep production releases flowing.
+
+![](images/trunk-based-development.jpg)
+
+## Github Flow
+
+Bei der Github Flow Strategie wird ein Development Branch erstellt und von diesem gehen für jedes Feature ein weiterer Branch weg. Ist das Feature fertig (z.B. am Ende eines Sprints) wird diese mittels eines Pull Requests auf den Development Branch gemerged. Danach wird der Development Branch auf den Master Branch gemerged.
+
+![](images/Githubflow.png)
+
 # AUFGABE 6: AGILES PM, VERSIONSKONTROLLE IN DER PRAXIS
 Spielen Sie einen kompletten Prozess im Sinne von 5) praktisch durch.
 - Setzen Sie die bekannten Versionierungsfunktionen ein.
 - Setzen Sie die in den vorhergehenden Aufgaben ermittelten SCRUM-Funktionen ein.
 - Wenden Sie eine leichtgewichtige Branching-Strategie an
-- Wenden sie automatische Tests und CI/CD-Pipelines an
 
+Zu Beginn wurde das Kino Projekt aus TDD auf das Repository gepusht. Danach wurde ein Cycle der Github-Flow Strategie durchgespielt. 
+
+![picture 6](images/25351993b099864f233f9736728743cc54b9c2ecf43dcf791dc58e8d4f1c1371.png) 
+
+![picture 8](images/3718b33dc58c59072ce6c5fa735f0d8ce289a7d9ae8c411c295df447a5c2aa1c.png)  
+
+
+![picture 7](images/353894922e405994c2ea271c32e20580d235e5af9acbb746e63fb6f8372f030c.png)  
+
+![picture 9](images/bd6d209f823ed1949f2514fa9cab5b21779c45f7a9eac1ba65238dcfe53d28fc.png)  
+
+![picture 10](images/b3f5a8b4e5d6b9ec8f31112c2e2165277dc0380cc6eccb3e89d63dc765679277.png)  
+
+![picture 11](images/a124c2d45ec20a8018a9ccce7061d579fa79dda02b32e749ac987856e50a88f3.png)  
+
+
+- Wenden sie automatische Tests und CI/CD-Pipelines an
+  
+  Eine CI/CD-Pipeline kann über die Github Actions Funktion erstellt werden. Hierbei wird eine Vorlage für ein Java Projekt mit Maven verwendet. In der erzeugten yaml Datei musste noch die Java Version angepasst werden und etwas optionales herausgelöscht. Die Pipeline springt an, wenn ein Pull Request oder ein Push auf den Main Branch stattfindet.
+
+![picture 1](images/02dbf6ff1ed995cbf4dd110921a98bfdcf2398b960170a461ad43fd8ff4b39b0.png)  
+
+
+![picture 2](images/321f3d86cbdbf9b01c2186716e97756427a34dca1a6560940f7fae72c0d5d0f3.png)  
+
+![picture 3](images/3bf6a5bba3efa25656816462730979bf30195f4e9bd15a42aa5781eabe4b0a74.png) 
+
+
+![picture 5](images/c82040cdd230f44db37db3101139a2f4536da37feaf9253a7c0562c35262936e.png)  
 
 
