@@ -12,6 +12,7 @@ Von Manuel Foidl
 - [Spring Boot](#spring-boot)
 - [Objektorientierte Analyse](#objektorientierte-analyse)
 - [Test-Driven-Development](#test-driven-development)
+- [SCUM-Projektmanagement](#scum-projektmanagement)
 
 
 # Datenpersistenz (JDBC)
@@ -25,4 +26,7 @@ Von Manuel Foidl
 
 # Test-Driven-Development
 [Dokumentation Test-Driven-Development](TDD/README.md)
+
+# SCUM-Projektmanagement
+[Dokumentation SCUM](Scrum//README.md)
 
