@@ -91,7 +91,150 @@ Dokumentation (texthelle Beschreibung, Codeauszüge, C4-Diagramme, Klassendiagra
 - Bestellung auf IN_DELIVERY setzen wenn alle Packlistenitems gepackt sind
 
 Klassendiagramm:
+```mermaid
+classDiagram
+direction BT
+class Amount
+class ApiErrorResponse
+class ApiValidationErrorResponse
+class BaseRepository~T, I~ {
+<<Interface>>
 
+}
+class CustomerData
+class DbOrderMapperService
+class Email
+class ExceptionRestController
+class IncomingOrderPackedSpringEventHandler
+class LineItem
+class LineItemDbEntity
+class MonetaryAmount
+class Name
+class Order
+class OrderCommandService {
+<<Interface>>
+
+}
+class OrderCommandServiceImpl
+class OrderCustomerDetailsDbEntity
+class OrderDataValidationException
+class OrderDbEntity
+class OrderID
+class OrderIncomingMessagesPort {
+<<Interface>>
+
+}
+class OrderIncomingMessagesPortImpl
+class OrderJPARepository {
+<<Interface>>
+
+}
+class OrderOutgoingMessageRelay {
+<<Interface>>
+
+}
+class OrderOutgoingSpringMessageRelayImpl
+class OrderPackedEvent
+class OrderPaymentCheckFailedException
+class OrderPaymentValidatedEvent
+class OrderPlacedEvent
+class OrderPlacedFieldValidationException
+class OrderPlacementNotSuccessfullException
+class OrderPosition
+class OrderQueryService {
+<<Interface>>
+
+}
+class OrderQueryServiceImpl
+class OrderRepository {
+<<Interface>>
+
+}
+class OrderRepositoryImpl
+class OrderResponseMapper
+class OrderRestController
+class OrderState {
+<<enumeration>>
+
+}
+class OrderStateChangeNotPossibleException
+class OrderStateChangedEvent
+class OrderWithGivenIDNotFoundException
+class Percentage
+class ProductNumber
+
+DbOrderMapperService  ..>  Amount : «create»
+DbOrderMapperService  ..>  CustomerData : «create»
+DbOrderMapperService  ..>  Email : «create»
+DbOrderMapperService  ..>  LineItem : «create»
+DbOrderMapperService  ..>  LineItemDbEntity : «create»
+DbOrderMapperService  ..>  MonetaryAmount : «create»
+DbOrderMapperService  ..>  Name : «create»
+DbOrderMapperService  ..>  Order : «create»
+DbOrderMapperService  ..>  OrderCustomerDetailsDbEntity : «create»
+DbOrderMapperService  ..>  OrderDbEntity : «create»
+DbOrderMapperService  ..>  OrderID : «create»
+DbOrderMapperService  ..>  OrderPosition : «create»
+DbOrderMapperService  ..>  Percentage : «create»
+DbOrderMapperService  ..>  ProductNumber : «create»
+ExceptionRestController  ..>  ApiErrorResponse : «create»
+ExceptionRestController  ..>  ApiValidationErrorResponse : «create»
+IncomingOrderPackedSpringEventHandler  ..>  OrderID : «create»
+IncomingOrderPackedSpringEventHandler "1" *--> "orderIncomingMessagesPort 1" OrderIncomingMessagesPort 
+IncomingOrderPackedSpringEventHandler  ..>  OrderPackedEvent : «create»
+LineItem "1" *--> "amount 1" Amount 
+LineItem "1" *--> "priceNet 1" MonetaryAmount 
+LineItem  ..>  MonetaryAmount : «create»
+LineItem "1" *--> "productName 1" Name 
+LineItem "1" *--> "orderPosition 1" OrderPosition 
+LineItem "1" *--> "tax 1" Percentage 
+LineItem "1" *--> "productNumber 1" ProductNumber 
+Order "1" *--> "customerData 1" CustomerData 
+Order "1" *--> "lineItems *" LineItem 
+Order "1" *--> "taxTotal 1" MonetaryAmount 
+Order  ..>  MonetaryAmount : «create»
+Order "1" *--> "orderID 1" OrderID 
+Order "1" *--> "state 1" OrderState 
+Order  ..>  OrderStateChangeNotPossibleException : «create»
+OrderCommandServiceImpl  ..>  Amount : «create»
+OrderCommandServiceImpl  ..>  CustomerData : «create»
+OrderCommandServiceImpl  ..>  Email : «create»
+OrderCommandServiceImpl  ..>  LineItem : «create»
+OrderCommandServiceImpl  ..>  MonetaryAmount : «create»
+OrderCommandServiceImpl  ..>  Name : «create»
+OrderCommandServiceImpl  ..>  Order : «create»
+OrderCommandServiceImpl  ..>  OrderCommandService 
+OrderCommandServiceImpl  ..>  OrderDataValidationException : «create»
+OrderCommandServiceImpl  ..>  OrderID : «create»
+OrderCommandServiceImpl "1" *--> "orderOutgoingMessageRelay 1" OrderOutgoingMessageRelay 
+OrderCommandServiceImpl  ..>  OrderPaymentCheckFailedException : «create»
+OrderCommandServiceImpl  ..>  OrderPaymentValidatedEvent : «create»
+OrderCommandServiceImpl  ..>  OrderPlacedEvent : «create»
+OrderCommandServiceImpl  ..>  OrderPlacementNotSuccessfullException : «create»
+OrderCommandServiceImpl  ..>  OrderPosition : «create»
+OrderCommandServiceImpl "1" *--> "orderRepository 1" OrderRepository 
+OrderCommandServiceImpl  ..>  Percentage : «create»
+OrderCommandServiceImpl  ..>  ProductNumber : «create»
+OrderDbEntity "1" *--> "lineItems *" LineItemDbEntity 
+OrderDbEntity "1" *--> "orderCustomerDetails 1" OrderCustomerDetailsDbEntity 
+OrderDbEntity "1" *--> "state 1" OrderState 
+OrderIncomingMessagesPortImpl  ..>  OrderIncomingMessagesPort 
+OrderIncomingMessagesPortImpl  ..>  OrderPaymentCheckFailedException : «create»
+OrderIncomingMessagesPortImpl "1" *--> "orderRepository 1" OrderRepository 
+OrderIncomingMessagesPortImpl  ..>  OrderWithGivenIDNotFoundException : «create»
+OrderOutgoingSpringMessageRelayImpl  ..>  OrderOutgoingMessageRelay 
+OrderPackedEvent "1" *--> "orderId 1" OrderID 
+OrderQueryServiceImpl  ..>  OrderID : «create»
+OrderQueryServiceImpl  ..>  OrderQueryService 
+OrderQueryServiceImpl "1" *--> "orderRepository 1" OrderRepository 
+OrderQueryServiceImpl  ..>  OrderWithGivenIDNotFoundException : «create»
+OrderRepository  -->  BaseRepository~T, I~ 
+OrderRepositoryImpl "1" *--> "orderJPARepository 1" OrderJPARepository 
+OrderRepositoryImpl  ..>  OrderRepository 
+OrderRestController "1" *--> "orderCommandService 1" OrderCommandService 
+OrderRestController  ..>  OrderPlacedFieldValidationException : «create»
+OrderRestController "1" *--> "orderQueryService 1" OrderQueryService 
+```
 
 # Aufgabe Makroarchitektur Teil 3 (Microservices)
 
