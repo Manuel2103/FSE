@@ -17,7 +17,8 @@ public record PlaceOrderCommand(
         @NotNull @Size(min = 1, message = "Customer zipcode must not be null and must have at least 1 Character!") String customerZipcode,
         @NotNull @Size(min = 1, message = "Customer city must not be null and must have at least 1 Character!") String customerCity,
         @NotNull @Size(min = 1, message = "Customer country must not be null and must have at least 1 Character!") String customerCountry,
-        @Valid @NotNull List<CartItem> cartItems) { //Valdation cascading for Javax-Validation with @Valid
+        @Valid @NotNull List<CartItem> cartItems)
+{ //Valdation cascading for Javax-Validation with @Valid
 
     public PlaceOrderCommand {
         if (customerID == null) throw new IllegalArgumentException("CustomerID for placing order not valid!");
