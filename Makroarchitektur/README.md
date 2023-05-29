@@ -543,10 +543,87 @@ Ist eine Art der 3-Schichten-Architektur mit Events und Ports
 - diese Events werden von den Listeners dann aufgefangen und verarbeitet
 - in package business liegen die Entitäten ohne Businesslogik
 - nur über die Events sind die verschiedenen Managements verbunden und über den sharedkernel (dort ist alles enthalten, damit die Kommunikation erfolgreich ist)
+  
 ![Alt text](img/stockmanagement.png)
 
+
+C4-Diagramm
+
+Context-Diagramm:
+```mermaid
+C4Context
+        Person(user, "Benutzer", "Der Benutzer, der Kunde des System ist ")
+        System(erp, "ERP System", "Ermöglicht es Benutzer, Bestellungen aufzugeben und diese anzuzeigen")
+        Rel(user, erp, "Uses")
+        UpdateLayoutConfig($c4ShapeInRow="1", $c4BoundaryInRow="1")
+```
+
+Container-Diagramm:
+```mermaid
+C4Container
+    Person(user, "Benutzer", "Der Benutzer, der Kunde des System ist ")
+    Container_Boundary(c1, "ERP") {
+        Container(restapi1, "REST API Order", "Java, Spring", "Funktionen für Ordermanagement")
+        Container(restapi2, "REST API Stock", "Java, Spring", "Funktionen für Stockmanagement")
+        Container(restapi3, "REST API Customer", "Java, Spring", "Funktionen für Customermanagement")
+        ContainerDb(database, "Database", "H2 In Memory", "Speichert Customer, Orders und Stock")
+        Container(sharedkernel, "Shared Kernel", "Java, Spring", "Verbindet die einzelnen Module über Events")
+
+    }
+
+    BiRel(database, restapi1, "Uses")
+    BiRel(database, restapi2, "Uses")
+    BiRel(database, restapi3, "Uses")
+    Rel(restapi1, sharedkernel, "Uses")
+    Rel(restapi2, sharedkernel, "Uses")
+    Rel(restapi3, sharedkernel, "Uses")
+    BiRel(user,restapi1, "")
+    BiRel(user,restapi2,  "")
+    BiRel(user,restapi3,  "")
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+```
+Component-Diagramm Ordermanagement:
+```mermaid
+C4Component
+    Container_Boundary(c1, "REST API Order") {
+        Component(restapi1, "Order REST Controller", "Java, Spring", "Controller für Ordermanagement")
+        Component(restapi2, "Exception REST Controller", "Java, Spring", "Controller für Exception")
+    }
+    Container(sharedkernel, "Shared Kernel", "Java, Spring", "Verbindet die einzelnen Module über Events")
+    Container(services, "Services", "Java, Spring", "Services für Ports&Adapters Realisierung")
+    ContainerDb(database, "Database", "H2 In Memory", "Speichert Customer, Orders und Stock")
+
+    BiRel(database, services, "Uses")
+    BiRel(services, restapi1, "Uses")
+    BiRel(services, sharedkernel, "Events abwickeln")
+    Rel(restapi1, restapi2, "")
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+```
+
+Component-Diagramm Stockmanagement:
+```mermaid
+C4Component
+    Container_Boundary(c1, "REST API Stock") {
+        Component(publish, "StockMessagePublisher", "Java, Spring", "schickt Events")
+        Component(restapi1, "Stock REST Controller", "Java, Spring", "Controller für Ordermanagement")
+
+    }
+    Container(sharedkernel, "Shared Kernel", "Java, Spring", "Verbindet die einzelnen Module über Events")
+    Container(repo, "Repository", "Java, Spring", "Repository für DB Zugriff")
+    ContainerDb(database, "Database", "H2 In Memory", "Speichert Customer, Orders und Stock")
+
+    BiRel(database, repo, "Uses")
+    BiRel(repo, restapi1, "Uses")
+    BiRel(publish, sharedkernel, "Events abwickeln")
+    Rel(restapi1, publish, "Uses")
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+```
 Klassendiagramm des Ordermanagement:
 ![](img/ordermanagement.png)
+
+Klassendiagramm des Stockmanagement:
+![](img/stockmanagement_classs.png)
+
 
 
 # Aufgabe Makroarchitektur Teil 3 (Microservices)
