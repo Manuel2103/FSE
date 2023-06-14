@@ -26,6 +26,13 @@ Manuel Foidl
     - [Wo findet man Ports-Und-Adapters-Architektur?](#wo-findet-man-ports-und-adapters-architektur)
   - [Dokumentation (texthelle Beschreibung, Codeauszüge, Diagramme, C4-Diagramme, Klassendiagramme) der "Architektur" von Stockmanagement anhand der gegebenen Anwendungsfälle, die schon implementiert sind:](#dokumentation-texthelle-beschreibung-codeauszüge-diagramme-c4-diagramme-klassendiagramme-der-architektur-von-stockmanagement-anhand-der-gegebenen-anwendungsfälle-die-schon-implementiert-sind)
 - [Aufgabe Makroarchitektur Teil 3 (Microservices)](#aufgabe-makroarchitektur-teil-3-microservices)
+  - [Inbetriebnahme der Microservice-Variante von erplite](#inbetriebnahme-der-microservice-variante-von-erplite)
+  - [Abgabe einer Architekturanalyse des bestehenden erplitems-Backends](#abgabe-einer-architekturanalyse-des-bestehenden-erplitems-backends)
+    - [Schriftliche Dokumentation der Architektur als C4-Containerdiagramm und C4-Componentendiagramm incl. textuellen Beschreibungen, Codeauszügen und Screenshots.](#schriftliche-dokumentation-der-architektur-als-c4-containerdiagramm-und-c4-componentendiagramm-incl-textuellen-beschreibungen-codeauszügen-und-screenshots)
+    - [Die beschriebenen Use-Cases (Bestellung anlegen, Payment verifizieren, Packlistenitems abhaken) entlang der Architektur beschreiben, Codeauszüge zeigen, Screenshots mit den Resultaten zeigen, textuelle Beschreibungen dazu](#die-beschriebenen-use-cases-bestellung-anlegen-payment-verifizieren-packlistenitems-abhaken-entlang-der-architektur-beschreiben-codeauszüge-zeigen-screenshots-mit-den-resultaten-zeigen-textuelle-beschreibungen-dazu)
+      - [Bestellung anlegen](#bestellung-anlegen)
+      - [Payment verifizieren](#payment-verifizieren)
+      - [Packlistenitems abhaken](#packlistenitems-abhaken-1)
   
 
 
@@ -500,7 +507,6 @@ class OrderRepositoryImpl implements OrderRepository {
         return list.stream().map(dbEntity -> DbOrderMapperService.toDomain(dbEntity)).toList();
     }
 
-
     @Override
     public void deleteById(OrderID id) {
         this.orderJPARepository.deleteById(id.id());
@@ -627,9 +633,377 @@ Klassendiagramm des Stockmanagement:
 
 
 # Aufgabe Makroarchitektur Teil 3 (Microservices)
+## Inbetriebnahme der Microservice-Variante von erplite
+als Schritt für Schritt-Anleitung mit Screenshots und Text zu dokumentieren
 
-- Inbetriebnahme der Microservice-Variante von erplite
- als Schritt für Schritt-Anleitung mit Screenshots und Text zu dokumentieren
-- Abgabe einer Architekturanalyse des bestehenden erplitems-Backends
-  - Schriftliche Dokumentation der Architektur als C4-Containerdiagramm und C4-Componentendiagramm incl. textuellen Beschreibungen, Codeauszügen und Screenshots.
-  - Die beschriebenen Use-Cases (Bestellung anlegen, Payment verifizieren, Packlistenitems abhaken) entlang der Architektur beschreiben, Codeauszüge zeigen, Screenshots mit den Resultaten zeigen, textuelle Beschreibungen dazu
+Zuerst müssen die benötigten Docker Instanzen hochgefahren werden, denn diese werden von den einzelnen Programmen genutzt wie zum Beispiel MySql als Datenbank und Rabbitmq als Messenger.
+
+Danach werden die einzelnen Projekte in einem Intellij Projekt zusammengefasst. 
+
+![](img/Intellij_Projekt.jpg)
+
+Anschließend müssen die Projekte einzeln gestartet werden. Hierbei ist zu beachten, dass das Projekt servicediscovery als erstes gestartet werden.
+Nachdem sollte dies wie folgt aussehen:
+
+![](img/Running_Microservices.jpg)
+
+Das Frontend wird in Visual Studio Code geöffnet. 
+
+![](img/Frontend_VSC.jpg)
+
+Das Frontend wird mit einem Webserver auf dem Port 5500 ausgeführt und sieht im Browser wie folgt aus:
+
+![](img/Frontend_Browser.jpg)
+
+Weiters kann kontrolliert werden, ob die Microservices erfolgreich eingecheckt worden sind.
+
+![](img/Service_Discovery_Web.jpg)
+
+Nun kann die Applikation genutzt werden.
+
+## Abgabe einer Architekturanalyse des bestehenden erplitems-Backends
+
+### Schriftliche Dokumentation der Architektur als C4-Containerdiagramm und C4-Componentendiagramm incl. textuellen Beschreibungen, Codeauszügen und Screenshots.
+
+Kurz und Knapp:
+Der OrderMS baut auf der Ports and Adapters Struktur auf. Gehen wird davon das, dass eine neue Order erstellt wird. Dabei geht ein Post-Request an den Rest-Controller ein und die entsprechende Funktion mit dem richtigen Mapping kümmert sich darum. Diese empfängt als Parameter eine PlaceOrderCommand. Der Body wird automatisch von Spring in ein solches PlaceOrderCommand gemappt. 
+
+![Alt text](img/orderrest.png)
+
+Das PlaceOrderCommand beinhaltet Datenfelder wie die Order-Domäne, jedoch sind alle als Typ String um eine geringe Kopplung zu erzielen. Außerdem enthält dieser Command nur die Datenfelder, die nicht automatisch vom System generiert werden.
+
+![Alt text](img/orderplacedcommand.png)
+
+Ein Beispiel beim PlaceOrderCommand ist die OrderID, diese ist nicht enthalten, da sie beim Handling dieses Commands im OrderCommandService generiert wird. Dieser PlaceOrderCommand sowie andere Commands werden in OrderCommandService handelt. Die handle-Methode wird überladen, indem sie Parameter von verschiedenen Commands enthält. Somit weiß man, auf welchen Command reagiert wird, da die verschiedenen Commands verschiedene Zwecke erfüllen. 
+
+![Alt text](img/ordercommandservice.png)
+
+Der OrderCommandService verwendet den Port OrderOutgoingMessageRelay und das OrderRepository. 
+
+![Alt text](img/orderplacedcommand2.png)
+
+Somit ist klar, dass man sich mit dem OrderCommandService im Servicelayer befindet und dieser über die Ports die Datenbank und das RabbitMQ Messaging verwendet. Nachdem aus dem PlaceOrderCommand ein Order-Objekt erstellt wurde, wird es über das Repository in die Datenbank geschrieben. Weiters wird ein Event veröffentlicht.
+![Alt text](img/repositorypublish.png)
+
+Für dieses ist beim Message Broker eine bestimmte Queue hinterlegt.
+
+![Alt text](img/messageoutgoing.png)
+
+Als Message wird aus dem Order-Objekt ein OrderResponse-Objekt (ist ein DTO => somit keine Abhängigkeiten) gemappt. Ein OrderResponse kann man sich wie Command vorstellen. Zur besseren Orientierung und das wenig Missverständnisse auftauchen, wird zwischen Response und Command unterschieden. 
+
+![Alt text](img/orderresponse.png)
+
+Sollte ein andere Microservice dieses Event abonniert haben, wird dieses im IncomingMessageRelay das neue Event erkennen und handeln. Es wird mit den Parameter die verschiedenen Events unterschieden dadurch die richtige Funktion ausgeführt, wenn auf eine Queue gehört wird wo mehrere verschiedene Events veröffentlicht werden. 
+
+![Alt text](img/incoming.png)
+
+Diese beschriebene Vorgehensweise kann auf alle anderen Use-Cases angeführt werden, vielleicht in anderer Reihenfolge.
+
+
+```mermaid
+C4Container
+    title Container Diagramm für ERPLite Microservices
+    Person(customer, Benutzer, "benutzt das ERPLite System", $tags="v1.0")
+    Container(frontend, "Frontend", "JavaScript", "Stellt den Content dar")
+
+    Container_Boundary(c1, "ERPLite") {
+        Container(apigw, "API Gateway", "routet bei Anfrage auf richtigen MS")
+        Container(sd, "Service Discovery", "Java, Spring, Eureka", "registriert MS")
+        Container(messaging, "Messaging", "RabbitMQ", "Kommunikation zwischen den MS")       
+        Container(orderms, "Order MS", "Java, Spring", "Microservice für Order Management")
+        Container(stockms, "Stock MS", "Java, Spring", "Microservice für Stock Management")
+        Container(customerms, "Customer MS", "Java, Spring", "Microservice für Customer Management")
+        ContainerDb(db_order, "DB Order", "SQL Datenbank", "hält Daten von OrderMS")
+        ContainerDb(db_stock, "DB Stock", "SQL Datenbank", "hält Daten von StockMS")
+        ContainerDb(db_customer, "DB Customer", "SQL Datenbank", "hält Daten von CustomerMS")
+    }
+
+    Rel(customer, frontend, "greift zu auf")
+    Rel(frontend, apigw, "greift auf Microservices zu über")
+    Rel(apigw, sd, "fragt mit Name an und erhält IP und Port von")
+    Rel(orderms, db_order, "")
+    Rel(stockms, db_stock, "")
+    Rel(customerms, db_customer, "")
+    BiRel(orderms, messaging, "kommuniziert mit")
+    BiRel(stockms, messaging, "kommuniziert mit")
+    BiRel(customerms, messaging, "kommuniziert mit")
+    Rel(orderms, sd, "")
+    Rel(customerms, sd, "")
+    Rel(stockms, sd, "")
+
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+```
+
+```mermaid
+C4Component
+    title Componentendiagramm Order
+    Container(front, "Frontend", "javascript and html", "Darstellung der Funktionen")
+    ContainerDb(db, "Database", "Relational Database Schema", "Tabellen für Order, Stock und Customer")
+
+    Container_Boundary(order, "Ordermanagement") {
+        Component(rest, "REST Controller", "Order Rest Controller", "Stellt verschiedene Mappings zur Verfügung")
+        Component(service, "Service Component", "Service Layer", "Funktionen zwischen den Schichten")
+        Component(dba, "Database Interface" "Database Access", "Zugriff auf die Datenbank")
+        Component(msg, "Messenger" "Rabbitmq", "Messenger zwischen den Microservices")
+
+    }
+    Rel(front, rest, "Uses")
+    Rel(rest, service, "Uses")
+    Rel(service, dba, "Uses")
+    Rel(service, msg, "Uses")
+    Rel(dba, db, "Uses")
+
+    UpdateRelStyle(front, rest, $offsetY="-40")
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+```
+
+### Die beschriebenen Use-Cases (Bestellung anlegen, Payment verifizieren, Packlistenitems abhaken) entlang der Architektur beschreiben, Codeauszüge zeigen, Screenshots mit den Resultaten zeigen, textuelle Beschreibungen dazu
+#### Bestellung anlegen
+![Alt text](img/Screenshot_2023-06-11_213153.png)
+
+![Alt text](img/Screenshot_2023-06-11_213608.png)
+
+Als erstes wird mit einem POST Request auf api/v1/orders gemacht. Diese Anfrage geht an den ApiGateway. Dieser hat Routen definiert, die zu einer bestimmten URI führen. Somit kann man mit Namen anfragen und nicht mit einer IP. Die Route geht in diesem Fall auf den Microservice Orders. 
+
+![Alt text](img/Screenshot_2023-06-11_215337.png)
+
+Im Body werden Dummydaten übergeben.
+Danach wird die Funktion getallorders aufgerufen.
+```javascript
+async function putorder()
+{
+    const resp = await fetch('http://localhost:9999/api/v1/orders',{
+        method:'POST',
+        headers:{
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: `{
+                    "customerID": "CUS1d34e56",
+                    "customerFirstname": "Caesar",
+                    "customerLastname": "Franklin",
+                    "customerEmail": "a.b@c.de",
+                    "customerStreet": "Hollywood Boulevard 2",
+                    "customerZipcode" : "3452",
+                    "customerCity" : "LA",
+                    "customerCountry" : "USA",
+                    "cartItems": [
+                        {
+                        "productNumber": "P123RE123D",
+                        "productName" : "MacBook Pro 2022",
+                        "priceNet" : 1000,
+                        "tax" : 20,
+                        "amount": 1
+                        },
+                        {
+                        "productNumber": "O12345RE12",
+                        "productName" : "Ipad Pro 2021",
+                        "priceNet" : 99.99,
+                        "tax" : 10,
+                        "amount": 10
+                        }
+                    ]
+                }`
+    })
+    const data = await resp.json()
+    alert(`New order with ID ${data.orderID} placed!`)
+    getallorders();
+}
+```
+Im OrderRestController springt das Post-Mapping an. 
+
+```java
+ @PostMapping("/orders")//TODO: Hier von /orders/ mit trailing slash gewechselt auf /orders
+    public ResponseEntity placeNewOrder(@RequestBody @Valid PlaceOrderCommand placeOrderCommand, BindingResult bindingResult) {
+
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Handling place new order api request ...");
+
+        HashMap<String, String> errors = new HashMap<>();
+
+        if (bindingResult.hasErrors()) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Errors in placeOrderCommand detected!");
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            throw new OrderPlacedFieldValidationException("Validation errors for order placement!", errors);
+        }
+
+        OrderResponse orderResponse = orderCommandService.handle(placeOrderCommand);
+
+        String resourceLocation = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/api/v1/orders/" + orderResponse.orderID();
+        try {
+            return ResponseEntity.created(new URI(resourceLocation)).body(orderResponse);
+        } catch (URISyntaxException e) {
+            return ResponseEntity.noContent().build();
+        }
+    }
+```
+```java
+public record PlaceOrderCommand(
+        @NotNull @Size(min = 10, max = 10, message = "Customer ID must have a length of 10!") String customerID,
+        @NotNull @Size(min = 1, message = "Customer firstname name must not be null and must have at least 1 Character!") String customerFirstname,
+        @NotNull @Size(min = 1, message = "Customer lastname  must not be null and must have at least 1 Character!") String customerLastname,
+        @Email String customerEmail,
+        @NotNull @Size(min = 1, message = "Customer street must not be null and must have at least 1 Character!") String customerStreet,
+        @NotNull @Size(min = 1, message = "Customer zipcode must not be null and must have at least 1 Character!") String customerZipcode,
+        @NotNull @Size(min = 1, message = "Customer city must not be null and must have at least 1 Character!") String customerCity,
+        @NotNull @Size(min = 1, message = "Customer country must not be null and must have at least 1 Character!") String customerCountry,
+        @Valid @NotNull List<CartItem> cartItems) { //Valdation cascading for Javax-Validation with @Valid
+```
+Der Body wird als PlacedOrderCommand gemappt, das im Shared Kernel definiert ist. Damit zwischen den Services keine Abhängigkeiten entstehen.
+
+Über das ordercommandservice handelt die verschiedenen Commands die im Zusammenhang mit Order auftreten können. Das ordercommandservice verwendet orderrepository und das orderoutgoingmessagerelay.
+```java
+@Transactional
+    public OrderResponse handle(PlaceOrderCommand placeOrderCommand) {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Handle place order command ...");
+        List<String> errors = validatePlaceOrderCommand(placeOrderCommand);
+        if (errors.size() != 0) throw new OrderDataValidationException(errors);
+
+        /**aus dem PlaceOrderCommand wird eine Order gebastelt**/
+
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Insert new order in DB ...");
+        //Über Repository wird Order in die Datenbank eingetragen
+        Optional<Order> orderOptional = this.orderRepository.insert(orderToInsert);
+
+        if (orderOptional.isPresent()) {
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Publishing order placed domain event ...");
+
+            //wenn schreiben in die DB ok, dann Message gepublisht
+            orderOutgoingMessageRelay.publish(new OrderPlacedEvent(OrderResponseMapper.toResponseFromDomain(orderOptional.get())));
+            //es wird ein ein OrderResponse gemappt und an den REST Controller zurückgegebene
+            return OrderResponseMapper.toResponseFromDomain(orderOptional.get());
+        } else {
+            throw new OrderPlacementNotSuccessfullException("OrderQueryServiceImpl: Order could not be placed!");
+        }
+    }
+```
+#### Payment verifizieren
+![Alt text](img/Screenshot_2023-06-11_221946.png)
+
+![Alt text](img/Screenshot_2023-06-11_221958.png)
+Es wird ein Post gesendet, mit der richtigen OrderID.
+```javascript
+ async function paymentok(orderid)
+    {
+      await fetch(
+            `http://localhost:9999/api/v1/orders/checkpayment/${orderid}`,{
+            method:'POST',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        alert("Order payment set. Packing requestet in stock!")
+        getallorders();
+    }
+```
+Dieser Post kommt beim OrderREstController an.
+```java
+@PostMapping("/orders/checkpayment/{orderid}")
+    public ResponseEntity validatePaymentForOrderWithId(@PathVariable String orderid) {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Handling check payment for order api request ...");
+        //das OrderCommand behandeln
+        this.orderCommandService.handle(new OrderPaymentCheckCommand(orderid));
+        return ResponseEntity.accepted().body("Order payment check executed. Order payment ok!");
+    }
+```
+Über den ordercommandservice wird der OrderPaymentCheckCommand gehandlt.
+```java
+ @Transactional
+    public void handle(OrderPaymentCheckCommand orderPaymentCheckCommand) throws OrderPaymentCheckFailedException {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Handling order payment check command ...");
+        if (orderPaymentCheckCommand == null)
+            throw new OrderPaymentCheckFailedException("Empty command for order payment check!");
+        if (!OrderID.isValid(orderPaymentCheckCommand.orderID()))
+            throw new OrderPaymentCheckFailedException("Order ID for order payment check not valid!");
+
+        //mit dem OrderRepository wird das Order mit der ID aus der DB geholt
+        Optional<Order> optionalOrderToCheck = this.orderRepository.getById(new OrderID(orderPaymentCheckCommand.orderID()));
+        if (optionalOrderToCheck.isPresent()) {
+            Order order = optionalOrderToCheck.get();
+            try { // versuchen den Status des Orders zu ändern
+                order.orderStateTransitionTo(OrderState.PAYMENT_VERIFIED);
+                //Status wird geupdated
+                this.orderRepository.updateOrderWithNewState(order);
+                //Message wird erzeugt und gepublished
+                this.orderOutgoingMessageRelay.publish(new OrderPaymentValidatedEvent(OrderResponseMapper.toResponseFromDomain(order)));
+                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Payment validated event published!");
+            } catch (OrderStateChangeNotPossibleException orderStateChangeNotPossibleException) {
+                throw new OrderPaymentCheckFailedException("Order payment check not possible. Order in wrong state! " + orderStateChangeNotPossibleException.getMessage());
+            }
+        } else {
+            throw new OrderPaymentCheckFailedException("Order with Id " + orderPaymentCheckCommand.orderID() + " not found for payment check!");
+        }
+    }
+```
+#### Packlistenitems abhaken
+![Alt text](img/Screenshot_2023-06-11_222733.png)
+
+![Alt text](img/Screenshot_2023-06-11_222750.png)
+
+Jedes Paketitem wird einzeln als verpackt markiert. Das wird über die ItemID bestimmt.
+```javascript
+async function setpackedforpackingitem(packingitemid)
+{
+    await fetch(
+        `http://localhost:9999/stock/setPackedForPacking/${packingitemid}`,{
+        method:'POST',
+        headers:{
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+    getallpackings()
+}
+```
+Diese Anfrage geht auf dem RestController des StockMS ein.
+
+```java
+ @PostMapping("/setPackedForPacking/{packingItemId}")
+    public ResponseEntity setPackingItemPackedForPacking(@PathVariable Long packingItemId) {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Handling packing for item# " + packingItemId);
+
+        //holt sich das PackingItem über das Repository aus der DB
+        Optional<PackingItem> optionalPackingItem = this.packingItemRepository.findById(packingItemId);
+
+        if(!optionalPackingItem.isPresent())
+        {
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Packing for item# " + packingItemId + " not possible, item not present!");
+            return ResponseEntity.badRequest().body("Packing for item# " + packingItemId + " not possible, item not present!");
+        } else {
+            PackingItem packingItem = optionalPackingItem.get();
+
+            if(packingItem.isPacked())
+            {
+                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Packing for item# " + packingItemId + " not possible, item already packed!");
+                return ResponseEntity.badRequest().body("Packing for item# " + packingItemId + " not possible, item already packed!");
+            } else
+            {
+                //Item als verpackt setzen
+                packingItem.setPacked(true);
+                //Item wird über Repository in Daten gespeichert
+                packingItemRepository.save(packingItem);
+
+                Long packingId = packingItem.getPacking().getId();
+
+                Optional<Packing> packing = this.packingRepository.findById(packingId);
+
+                //check if all are packed, when one new item is packed (above) -> only works because we leave if item to pack that is already packed, see above
+                boolean allpaked = true;
+                for (PackingItem item : packing.get().getPackingItemList()) {
+                    if (!item.isPacked()) allpaked = false;
+                }
+                String returnMessage = "";
+                if (allpaked) {
+                    Logger.getLogger(this.getClass().getName()).log(Level.INFO, "All items for order# " + packing.get().getOrderId() + "packed. Publishing event ...");
+                    //wenn alle verpackt sind, wir eine Message gepublisht
+                    this.stockMessagePublisher.publishOrderPackedEventForOrderId(packing.get().getOrderId());
+                    returnMessage += "All items for order# " + packing.get().getOrderId() + "packed.";
+                }
+                returnMessage = "Packing for item# " + packingItemId + " done!" + returnMessage;
+                return ResponseEntity.ok().body(returnMessage);
+            }
+        }
+    }
+```

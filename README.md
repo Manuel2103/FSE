@@ -13,6 +13,7 @@ Von Manuel Foidl
 - [Objektorientierte Analyse](#objektorientierte-analyse)
 - [Test-Driven-Development](#test-driven-development)
 - [SCUM-Projektmanagement](#scum-projektmanagement)
+- [Makroarchitektur](#makroarchitektur)
 
 
 # Datenpersistenz (JDBC)
@@ -28,5 +29,8 @@ Von Manuel Foidl
 [Dokumentation Test-Driven-Development](TDD/README.md)
 
 # SCUM-Projektmanagement
-[Dokumentation SCUM](Scrum//README.md)
+[Dokumentation SCUM](Scrum/README.md)
+
+# Makroarchitektur
+[Dokumentation Makroarchitektur](Makroarchitektur/README.md)
 
